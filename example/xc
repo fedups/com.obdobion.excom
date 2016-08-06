@@ -1,0 +1,1 @@
+java -Dlog4j.configuration=file:///home/email/run_dir/conf/log4j.xml -jar ~/run_dir/lib/excom.jar $@
