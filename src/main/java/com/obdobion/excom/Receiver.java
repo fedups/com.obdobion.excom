@@ -66,41 +66,17 @@ public class Receiver
     public ClientCommand createCommand(final String cmdName, final IExternalRequest cmd)
             throws ParseException, IOException
     {
-        return createCommand(null, cmdName, cmd, (String[]) null);
-    }
-
-    public ClientCommand createCommand(final String cmdName, final IExternalRequest cmd, final String... parserDef)
-            throws ParseException, IOException
-    {
-        return createCommand(null, cmdName, cmd, parserDef);
-    }
-
-    public ClientCommand createCommand(final String title, final String cmdName, final IExternalRequest cmd)
-            throws ParseException, IOException
-    {
-        return createCommand(title, cmdName, cmd, (String[]) null);
+        return createCommand(null, cmdName, cmd);
     }
 
     public ClientCommand createCommand(
             final String title,
             final String cmdName,
-            final IExternalRequest cmd,
-            final String... parserDef) throws ParseException, IOException
+            final IExternalRequest cmd) throws ParseException, IOException
     {
         final ICmdLine cmdLine = new CmdLine(cmdName);
-        if (parserDef != null)
-            /*
-             * this probably means that annotations are being used and the
-             * "parse" method will "compile" those instead of this explicit
-             * compile.
-             */
-            cmdLine.compile(parserDef == null
-                    ? new String[] {}
-                    : parserDef);
-
         final ClientCommand cc = new ClientCommand(title, cmdName, cmdLine, cmd);
         clientCommands.put(cmdName.toLowerCase(), cc);
-
         return cc;
     }
 
@@ -129,8 +105,7 @@ public class Receiver
                 {
                     try
                     {
-                        register(wrapper.getTitle(), wrapper.getCommandName(), wrapper.getCommand(),
-                                wrapper.getParserDef());
+                        register(wrapper.getTitle(), wrapper.getCommandName(), wrapper.getCommand());
                     } catch (final ParseException e)
                     {
                         logger.error(wrapper.toString(), e);
@@ -180,25 +155,10 @@ public class Receiver
         return register(createCommand(cmdName, cmd));
     }
 
-    public Receiver register(final String cmdName, final IExternalRequest cmd, final String... parserDef)
-            throws ParseException, IOException
-    {
-        return register(createCommand(cmdName, cmd, parserDef));
-    }
-
     public Receiver register(final String title, final String cmdName, final IExternalRequest cmd)
             throws ParseException, IOException
     {
         return register(createCommand(title, cmdName, cmd));
-    }
-
-    public Receiver register(
-            final String title,
-            final String cmdName,
-            final IExternalRequest cmd,
-            final String... parserDef) throws ParseException, IOException
-    {
-        return register(createCommand(title, cmdName, cmd, parserDef));
     }
 
     public Receiver registerStandard() throws ParseException, IOException

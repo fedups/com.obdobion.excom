@@ -16,10 +16,6 @@ public class Echo implements IExternalRequest
             help = "A message that will be logged in the server's output.")
     private String              message;
 
-    public Echo()
-    {
-    }
-
     public String execute(final ClientCommand cc) throws Exception
     {
         logger.info(message.trim());

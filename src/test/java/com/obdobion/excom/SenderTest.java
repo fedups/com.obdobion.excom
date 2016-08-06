@@ -3,10 +3,13 @@ package com.obdobion.excom;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.obdobion.argument.annotation.Arg;
+
 public class SenderTest
 {
     public class MyRequest implements IExternalRequest
     {
+        @Arg(caseSensitive = true)
         public String myParm;
 
         public String execute(final ClientCommand cc) throws Exception
@@ -43,7 +46,7 @@ public class SenderTest
                     Assert.fail("thread should have been aborted");
                     return "thread should have been aborted";
                 }
-            }, new String[] {});
+            });
             cc.setTimeoutMS(500);
             rcvr.register(cc);
 
@@ -86,7 +89,7 @@ public class SenderTest
                     Assert.fail("thread should have been aborted");
                     return "thread should have been aborted";
                 }
-            }, new String[] {});
+            });
             cc.setTimeoutMS(-1);
             rcvr.register(cc);
 
@@ -123,7 +126,7 @@ public class SenderTest
                     interruptMsgShouldBeNull = "this should not be set";
                     return "should not return";
                 }
-            }, new String[] {});
+            });
             rcvr.go();
 
             final Sender sender = new Sender(2526);
@@ -178,7 +181,7 @@ public class SenderTest
                     interruptMsgShouldBeNull = "this should not be set";
                     return "should not return";
                 }
-            }, new String[] {});
+            });
             rcvr.go();
             final ExComContext result = new Sender(2526).send(new ExComContext(false, "waitForever", ""));
             Assert.assertEquals("testNoParms result", "submitted", result.toString());
@@ -208,7 +211,7 @@ public class SenderTest
                 {
                     return "That was fun";
                 }
-            }, new String[] {});
+            });
             rcvr.go();
             final ExComContext result = new Sender(2526).send(new ExComContext("testNoParms"));
             Assert.assertEquals("testNoParms result", "That was fun", result.toString());
@@ -225,9 +228,7 @@ public class SenderTest
         final Receiver rcvr = new Receiver(2526);
         try
         {
-            rcvr.register("testWithParms", new MyRequest(),
-                    new String[] { "--type String -c --key myParm --var myParm" })
-                    .go();
+            rcvr.register("testWithParms", new MyRequest()).go();
             final ExComContext result = new Sender(2526).send(new ExComContext("testWithParms", "--myParm WHAT!"));
             Assert.assertEquals("testWithParms result", "WHAT!", result.toString());
         } finally

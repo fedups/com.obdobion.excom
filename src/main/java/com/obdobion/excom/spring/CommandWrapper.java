@@ -6,7 +6,6 @@ public class CommandWrapper
 {
     private IExternalRequest command;
     private String           commandName;
-    private String[]         parserDef;
     private String           title;
 
     public IExternalRequest getCommand()
@@ -17,11 +16,6 @@ public class CommandWrapper
     public String getCommandName()
     {
         return commandName;
-    }
-
-    public String[] getParserDef()
-    {
-        return parserDef;
     }
 
     public String getTitle()
@@ -37,11 +31,6 @@ public class CommandWrapper
     public void setCommandName(final String commandName)
     {
         this.commandName = commandName;
-    }
-
-    public void setParserDef(final String... parserDef)
-    {
-        this.parserDef = parserDef;
     }
 
     public void setTitle(final String title)

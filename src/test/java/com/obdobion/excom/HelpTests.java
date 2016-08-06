@@ -3,17 +3,17 @@ package com.obdobion.excom;
 import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import com.obdobion.argument.annotation.Arg;
+
 public class HelpTests
 {
-
     public class MyRequest implements IExternalRequest
     {
-
+        @Arg
         public String myParm;
 
         public String execute(final ClientCommand cc) throws Exception
         {
-
             return myParm;
         }
     }
@@ -23,11 +23,8 @@ public class HelpTests
     @Test
     public void testHelpTOC() throws Exception
     {
-
         final Receiver rcvr = new Receiver(2526);
-        rcvr.register("This is a test command - nothing to see here.", "testWithParms", new MyRequest(), new String[] {
-                "--type String --key myParm --var myParm"
-        });
+        rcvr.register("This is a test command - nothing to see here.", "testWithParms", new MyRequest());
         try
         {
             rcvr.go();
@@ -42,11 +39,8 @@ public class HelpTests
     @Test
     public void testHelpTopic() throws Exception
     {
-
         final Receiver rcvr = new Receiver(2526);
-        rcvr.register("testWithParms", new MyRequest(), new String[] {
-                "--type String --key myParm --var myParm"
-        });
+        rcvr.register("testWithParms", new MyRequest());
         try
         {
             rcvr.go();
@@ -61,11 +55,8 @@ public class HelpTests
     @Test
     public void testHelpTopicQuestionMark() throws Exception
     {
-
         final Receiver rcvr = new Receiver(2526);
-        rcvr.register("testWithParms", new MyRequest(), new String[] {
-                "--type String --key myParm --var myParm"
-        });
+        rcvr.register("testWithParms", new MyRequest());
         try
         {
             rcvr.go();
@@ -76,5 +67,4 @@ public class HelpTests
             rcvr.stop();
         }
     }
-
 }

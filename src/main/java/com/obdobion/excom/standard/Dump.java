@@ -17,14 +17,8 @@ public class Dump implements IExternalRequest
     private Pattern[] threadPattern;
 
     @Arg(shortName = 'v',
-            longName = "invertMatches",
-            defaultValues = "false",
             help = "Inverts the selection based on -m.  Only valid with -m")
     private boolean   invertMatches;
-
-    public Dump()
-    {
-    }
 
     public String execute(final ClientCommand cc) throws Exception
     {

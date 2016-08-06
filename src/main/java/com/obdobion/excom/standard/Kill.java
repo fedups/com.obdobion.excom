@@ -9,16 +9,11 @@ public class Kill implements IExternalRequest
     @Arg(longName = "exitCode",
             positional = true,
             inList = { "0", "9" },
-            defaultValues = "0",
             help = "0 causes a normal end of the JVM with all finalizers.  9 causes a halt of the JVM.")
     private int     exitCode;
 
-    @Arg(shortName = 'c', longName = "confirm", required = true)
-    private boolean unusedBoolean;
-
-    public Kill()
-    {
-    }
+    @Arg(shortName = 'c', required = true)
+    private boolean confirm;
 
     public String execute(final ClientCommand cc) throws Exception
     {
@@ -45,7 +40,7 @@ public class Kill implements IExternalRequest
             }).start();
             break;
         default:
-            return "kill " + exitCode + " is not a valid exit code";
+            return "kill " + exitCode + " is not a supported exit code";
         }
 
         return "ok";
