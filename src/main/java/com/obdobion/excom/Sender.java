@@ -9,6 +9,11 @@ import org.apache.log4j.NDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>Sender class.</p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ */
 public class Sender
 {
     private final static Logger logger = LoggerFactory.getLogger(Sender.class.getName());
@@ -17,6 +22,11 @@ public class Sender
     int                         port   = 2526;
     Socket                      socket = null;
 
+    /**
+     * <p>Constructor for Sender.</p>
+     *
+     * @param port a int.
+     */
     public Sender(final int port)
     {
         this.port = port;
@@ -100,6 +110,13 @@ public class Sender
         }
     }
 
+    /**
+     * <p>send.</p>
+     *
+     * @param context a {@link com.obdobion.excom.ExComContext} object.
+     * @return a {@link com.obdobion.excom.ExComContext} object.
+     * @throws java.io.IOException if any.
+     */
     public ExComContext send(final ExComContext context) throws IOException
     {
         NDC.push(context.commandName.trim() + "@" + host + ":" + port);

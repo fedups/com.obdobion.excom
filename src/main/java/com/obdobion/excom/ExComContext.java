@@ -1,5 +1,10 @@
 package com.obdobion.excom;
 
+/**
+ * <p>ExComContext class.</p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ */
 public class ExComContext
 {
     protected ClientCommand clientCommand;
@@ -10,12 +15,22 @@ public class ExComContext
     long                    timeoutMS;
     boolean                 wait;
 
+    /**
+     * <p>Constructor for ExComContext.</p>
+     */
     public ExComContext()
     {
         this.wait = true;
         this.timeoutMS = -1;
     }
 
+    /**
+     * <p>Constructor for ExComContext.</p>
+     *
+     * @param wait a boolean.
+     * @param commandName a {@link java.lang.String} object.
+     * @param commandArgs a {@link java.lang.String} object.
+     */
     public ExComContext(final boolean wait, final String commandName, final String... commandArgs)
     {
         this.commandName = commandName;
@@ -24,6 +39,11 @@ public class ExComContext
         this.timeoutMS = -1;
     }
 
+    /**
+     * <p>Constructor for ExComContext.</p>
+     *
+     * @param commandName a {@link java.lang.String} object.
+     */
     public ExComContext(final String commandName)
     {
         this.commandName = commandName;
@@ -31,6 +51,12 @@ public class ExComContext
         this.timeoutMS = -1;
     }
 
+    /**
+     * <p>Constructor for ExComContext.</p>
+     *
+     * @param commandName a {@link java.lang.String} object.
+     * @param commandArgs a {@link java.lang.String} object.
+     */
     public ExComContext(final String commandName, final String... commandArgs)
     {
         this.commandName = commandName;
@@ -40,6 +66,8 @@ public class ExComContext
     }
 
     /**
+     * {@inheritDoc}
+     *
      * Short hand to get the results of the command. Do not change this for any
      * other reason. The end user probably depends on getting exactly what their
      * command returns.

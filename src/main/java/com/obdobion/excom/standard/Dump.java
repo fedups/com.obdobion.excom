@@ -7,6 +7,11 @@ import com.obdobion.argument.annotation.Arg;
 import com.obdobion.excom.ClientCommand;
 import com.obdobion.excom.IExternalRequest;
 
+/**
+ * <p>Dump class.</p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ */
 public class Dump implements IExternalRequest
 {
     @Arg(shortName = 'm',
@@ -20,6 +25,7 @@ public class Dump implements IExternalRequest
             help = "Inverts the selection based on -m.  Only valid with -m")
     private boolean   invertMatches;
 
+    /** {@inheritDoc} */
     public String execute(final ClientCommand cc) throws Exception
     {
         final StringBuilder out = new StringBuilder();

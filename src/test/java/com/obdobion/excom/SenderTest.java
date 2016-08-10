@@ -5,6 +5,12 @@ import org.junit.Test;
 
 import com.obdobion.argument.annotation.Arg;
 
+/**
+ * <p>SenderTest class.</p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ * @since 2.0.1
+ */
 public class SenderTest
 {
     public class MyRequest implements IExternalRequest
@@ -20,6 +26,11 @@ public class SenderTest
 
     static String interruptMsgShouldBeNull;
 
+    /**
+     * <p>abortingAHungThreadCCTimer.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void abortingAHungThreadCCTimer() throws Exception
     {
@@ -63,6 +74,11 @@ public class SenderTest
         }
     }
 
+    /**
+     * <p>abortingAHungThreadContextTimer.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void abortingAHungThreadContextTimer() throws Exception
     {
@@ -107,6 +123,11 @@ public class SenderTest
         }
     }
 
+    /**
+     * <p>submitWhileBusy.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void submitWhileBusy() throws Exception
     {
@@ -154,6 +175,11 @@ public class SenderTest
         }
     }
 
+    /**
+     * <p>targetPortNotUp.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void targetPortNotUp() throws Exception
     {
@@ -163,6 +189,11 @@ public class SenderTest
                 .toString());
     }
 
+    /**
+     * <p>testNeverEndingCommand.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void testNeverEndingCommand() throws Exception
     {
@@ -199,6 +230,11 @@ public class SenderTest
         }
     }
 
+    /**
+     * <p>testNoParms.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void testNoParms() throws Exception
     {
@@ -222,6 +258,11 @@ public class SenderTest
         }
     }
 
+    /**
+     * <p>testWithParms.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void testWithParms() throws Exception
     {

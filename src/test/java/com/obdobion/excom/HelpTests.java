@@ -5,6 +5,12 @@ import org.junit.Test;
 
 import com.obdobion.argument.annotation.Arg;
 
+/**
+ * <p>HelpTests class.</p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ * @since 2.0.1
+ */
 public class HelpTests
 {
     public class MyRequest implements IExternalRequest
@@ -20,6 +26,11 @@ public class HelpTests
 
     Logger log = Logger.getLogger("");
 
+    /**
+     * <p>testHelpTOC.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void testHelpTOC() throws Exception
     {
@@ -36,6 +47,11 @@ public class HelpTests
         }
     }
 
+    /**
+     * <p>testHelpTopic.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void testHelpTopic() throws Exception
     {
@@ -52,6 +68,11 @@ public class HelpTests
         }
     }
 
+    /**
+     * <p>testHelpTopicQuestionMark.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void testHelpTopicQuestionMark() throws Exception
     {

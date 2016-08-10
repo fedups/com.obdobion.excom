@@ -20,6 +20,11 @@ import com.obdobion.excom.standard.Echo;
 import com.obdobion.excom.standard.GC;
 import com.obdobion.excom.standard.Kill;
 
+/**
+ * <p>Receiver class.</p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ */
 public class Receiver
 {
     private final static Logger  logger         = LoggerFactory.getLogger(Receiver.class.getName());
@@ -49,6 +54,11 @@ public class Receiver
         setPort(2526);
     }
 
+    /**
+     * <p>Constructor for Receiver.</p>
+     *
+     * @param _port a int.
+     */
     public Receiver(final int _port)
     {
         super();
@@ -56,6 +66,12 @@ public class Receiver
         setPort(_port);
     }
 
+    /**
+     * <p>Constructor for Receiver.</p>
+     *
+     * @param _host a {@link java.lang.String} object.
+     * @param _port a int.
+     */
     public Receiver(final String _host, final int _port)
     {
         super();
@@ -63,12 +79,31 @@ public class Receiver
         setPort(_port);
     }
 
+    /**
+     * <p>createCommand.</p>
+     *
+     * @param cmdName a {@link java.lang.String} object.
+     * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
+     * @return a {@link com.obdobion.excom.ClientCommand} object.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
+     */
     public ClientCommand createCommand(final String cmdName, final IExternalRequest cmd)
             throws ParseException, IOException
     {
         return createCommand(null, cmdName, cmd);
     }
 
+    /**
+     * <p>createCommand.</p>
+     *
+     * @param title a {@link java.lang.String} object.
+     * @param cmdName a {@link java.lang.String} object.
+     * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
+     * @return a {@link com.obdobion.excom.ClientCommand} object.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
+     */
     public ClientCommand createCommand(
             final String title,
             final String cmdName,
@@ -80,21 +115,41 @@ public class Receiver
         return cc;
     }
 
+    /**
+     * <p>Getter for the field <code>commandsToBeRegistered</code>.</p>
+     *
+     * @return a {@link java.util.List} object.
+     */
     public List<CommandWrapper> getCommandsToBeRegistered()
     {
         return commandsToBeRegistered;
     }
 
+    /**
+     * <p>Getter for the field <code>host</code>.</p>
+     *
+     * @return a {@link java.lang.String} object.
+     */
     public String getHost()
     {
         return host;
     }
 
+    /**
+     * <p>Getter for the field <code>port</code>.</p>
+     *
+     * @return a int.
+     */
     public int getPort()
     {
         return port;
     }
 
+    /**
+     * <p>go.</p>
+     *
+     * @throws java.io.IOException if any.
+     */
     public void go() throws IOException
     {
         NDC.push(myNdcId());
@@ -125,6 +180,11 @@ public class Receiver
         }
     }
 
+    /**
+     * <p>isRunning.</p>
+     *
+     * @return a boolean.
+     */
     public boolean isRunning()
     {
         return running;
@@ -135,6 +195,14 @@ public class Receiver
         return "excom@" + getHost() + ":" + getPort();
     }
 
+    /**
+     * <p>register.</p>
+     *
+     * @param cc a {@link com.obdobion.excom.ClientCommand} object.
+     * @return a {@link com.obdobion.excom.Receiver} object.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
+     */
     public Receiver register(final ClientCommand cc) throws ParseException, IOException
     {
 
@@ -150,22 +218,56 @@ public class Receiver
         }
     }
 
+    /**
+     * <p>register.</p>
+     *
+     * @param cmdName a {@link java.lang.String} object.
+     * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
+     * @return a {@link com.obdobion.excom.Receiver} object.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
+     */
     public Receiver register(final String cmdName, final IExternalRequest cmd) throws ParseException, IOException
     {
         return register(createCommand(cmdName, cmd));
     }
 
+    /**
+     * <p>register.</p>
+     *
+     * @param title a {@link java.lang.String} object.
+     * @param cmdName a {@link java.lang.String} object.
+     * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
+     * @return a {@link com.obdobion.excom.Receiver} object.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
+     */
     public Receiver register(final String title, final String cmdName, final IExternalRequest cmd)
             throws ParseException, IOException
     {
         return register(createCommand(title, cmdName, cmd));
     }
 
+    /**
+     * <p>registerStandard.</p>
+     *
+     * @return a {@link com.obdobion.excom.Receiver} object.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
+     */
     public Receiver registerStandard() throws ParseException, IOException
     {
         return registerStandard("");
     }
 
+    /**
+     * <p>registerStandard.</p>
+     *
+     * @param prefix a {@link java.lang.String} object.
+     * @return a {@link com.obdobion.excom.Receiver} object.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
+     */
     public Receiver registerStandard(final String prefix) throws ParseException, IOException
     {
         ClientCommand cc;
@@ -185,26 +287,49 @@ public class Receiver
         return this;
     }
 
+    /**
+     * <p>Setter for the field <code>commandsToBeRegistered</code>.</p>
+     *
+     * @param commandsToBeRegistered a {@link java.util.List} object.
+     */
     public void setCommandsToBeRegistered(final List<CommandWrapper> commandsToBeRegistered)
     {
         this.commandsToBeRegistered = commandsToBeRegistered;
     }
 
+    /**
+     * <p>Setter for the field <code>host</code>.</p>
+     *
+     * @param _host a {@link java.lang.String} object.
+     */
     public void setHost(final String _host)
     {
         host = _host;
     }
 
+    /**
+     * <p>Setter for the field <code>port</code>.</p>
+     *
+     * @param port a int.
+     */
     public void setPort(final int port)
     {
         this.port = port;
     }
 
+    /**
+     * <p>Setter for the field <code>running</code>.</p>
+     *
+     * @param running a boolean.
+     */
     public void setRunning(final boolean running)
     {
         this.running = running;
     }
 
+    /**
+     * <p>stop.</p>
+     */
     public void stop()
     {
         NDC.push(myNdcId());

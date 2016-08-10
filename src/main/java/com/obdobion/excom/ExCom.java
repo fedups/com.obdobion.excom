@@ -3,6 +3,11 @@ package com.obdobion.excom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * <p>ExCom class.</p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ */
 public class ExCom
 {
 
@@ -23,7 +28,7 @@ public class ExCom
      * two parameters. The remainder of the parameters are transferred as is to
      * the receiver over a TCP/IP socket.
      *
-     * @param args
+     * @param args an array of {@link java.lang.String} objects.
      */
     public static void main(final String[] args)
     {

@@ -3,8 +3,19 @@ package com.obdobion.excom;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * <p>StandardCommandsTest class.</p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ * @since 2.0.1
+ */
 public class StandardCommandsTest
 {
+    /**
+     * <p>dumpAnd.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void dumpAnd() throws Exception
     {
@@ -24,6 +35,11 @@ public class StandardCommandsTest
         }
     }
 
+    /**
+     * <p>dumpAndInverse.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void dumpAndInverse() throws Exception
     {
@@ -43,6 +59,11 @@ public class StandardCommandsTest
         }
     }
 
+    /**
+     * <p>dumpMatchesSystem.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void dumpMatchesSystem() throws Exception
     {
@@ -62,6 +83,11 @@ public class StandardCommandsTest
         }
     }
 
+    /**
+     * <p>dumpMatchesSystemInverted.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void dumpMatchesSystemInverted() throws Exception
     {
@@ -81,6 +107,11 @@ public class StandardCommandsTest
         }
     }
 
+    /**
+     * <p>dumpShowAll.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void dumpShowAll() throws Exception
     {
@@ -104,6 +135,8 @@ public class StandardCommandsTest
     /**
      * This test can not normally be activated since it shuts down the test
      * harness. Run it stand-alone and it will succeed, but hang.
+     *
+     * @throws java.lang.Exception if any.
      */
     public void kill0() throws Exception
     {
@@ -143,6 +176,8 @@ public class StandardCommandsTest
     /**
      * This test can not normally be activated since it shuts down the test
      * harness. Run it stand-alone and it will succeed, but hang.
+     *
+     * @throws java.lang.Exception if any.
      */
     public void kill9() throws Exception
     {
@@ -178,6 +213,11 @@ public class StandardCommandsTest
         }
     }
 
+    /**
+     * <p>standardEcho.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void standardEcho() throws Exception
     {
@@ -196,6 +236,11 @@ public class StandardCommandsTest
         }
     }
 
+    /**
+     * <p>standardGC.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void standardGC() throws Exception
     {
@@ -215,6 +260,11 @@ public class StandardCommandsTest
         }
     }
 
+    /**
+     * <p>standardGCWithPrefix.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void standardGCWithPrefix() throws Exception
     {
@@ -233,6 +283,11 @@ public class StandardCommandsTest
         }
     }
 
+    /**
+     * <p>subsequentCommandsWork.</p>
+     *
+     * @throws java.lang.Exception if any.
+     */
     @Test
     public void subsequentCommandsWork() throws Exception
     {

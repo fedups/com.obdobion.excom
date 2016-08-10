@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.obdobion</groupId>
 	<artifactId>excom</artifactId>
-	<version>2.0.0</version>
+	<version>2.0.1</version>
 	<description>A command line tool to communicate with a running Java application.</description>
-	<name>${project.groupId}_${project.artifactId}</name>
+	<name>${project.groupId}.${project.artifactId}</name>
 	<url>https://github.com/fedups/excom</url>
 	<organization>
 		<name>Obdobion</name>
@@ -37,7 +37,7 @@
 		<junit.version>4.8.1</junit.version>
 		<log4j.version>1.2.17</log4j.version>
 		<slf4j.version>1.7.13</slf4j.version>
-		<argument.version>4.1.0</argument.version>
+		<argument.version>4.1.2</argument.version>
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
 	</properties>
 
@@ -77,12 +77,30 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.10.4</version>
+				<configuration>
+					<defaultAuthor>Chris DeGreef fedupforone@gmail.com</defaultAuthor>
+					<fixTags>author,since,param,return,throws,link</fixTags>
+				</configuration>
 				<executions>
 					<execution>
 						<id>javadoc-jar</id>
 						<phase>verify</phase>
 						<goals>
 							<goal>jar</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>javadoc-fix-main</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>fix</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>javadoc-fix-test</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>test-fix</goal>
 						</goals>
 					</execution>
 				</executions>

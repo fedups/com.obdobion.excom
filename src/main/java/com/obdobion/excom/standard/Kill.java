@@ -4,6 +4,11 @@ import com.obdobion.argument.annotation.Arg;
 import com.obdobion.excom.ClientCommand;
 import com.obdobion.excom.IExternalRequest;
 
+/**
+ * <p>Kill class.</p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ */
 public class Kill implements IExternalRequest
 {
     @Arg(longName = "exitCode",
@@ -15,6 +20,7 @@ public class Kill implements IExternalRequest
     @Arg(shortName = 'c', required = true)
     private boolean confirm;
 
+    /** {@inheritDoc} */
     public String execute(final ClientCommand cc) throws Exception
     {
         switch (exitCode)

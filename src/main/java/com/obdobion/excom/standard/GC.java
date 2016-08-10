@@ -5,10 +5,16 @@ import java.text.DecimalFormat;
 import com.obdobion.excom.ClientCommand;
 import com.obdobion.excom.IExternalRequest;
 
+/**
+ * <p>GC class.</p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ */
 public class GC implements IExternalRequest
 {
     static final private DecimalFormat MemFmt = new DecimalFormat("###,###,###,###");
 
+    /** {@inheritDoc} */
     public String execute(final ClientCommand cc) throws Exception
     {
         final long before = Runtime.getRuntime().freeMemory();

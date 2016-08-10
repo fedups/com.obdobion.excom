@@ -19,6 +19,13 @@ import org.slf4j.LoggerFactory;
 import com.obdobion.argument.CmdLine;
 import com.obdobion.argument.usage.UsageBuilder;
 
+/**
+ * <p>
+ * ReceiverThread class.
+ * </p>
+ *
+ * @author Chris DeGreef fedupforone@gmail.com
+ */
 public class ReceiverThread extends Thread
 {
     private final static Logger logger = LoggerFactory.getLogger(ReceiverThread.class.getName());
@@ -28,13 +35,25 @@ public class ReceiverThread extends Thread
     boolean                     running;
     protected ServerSocket      serverSocket;
 
+    /**
+     * <p>
+     * Constructor for ReceiverThread.
+     * </p>
+     *
+     * @param name
+     *            a {@link java.lang.String} object.
+     * @param receiver
+     *            a {@link com.obdobion.excom.Receiver} object.
+     * @param serverSocket
+     *            a {@link java.net.ServerSocket} object.
+     */
     public ReceiverThread(final String name, final Receiver receiver, final ServerSocket serverSocket)
     {
 
         super(name);
         this.receiver = receiver;
         this.serverSocket = serverSocket;
-        this.clientProcesses = new ArrayList<Thread>();
+        clientProcesses = new ArrayList<Thread>();
     }
 
     private void addClientProcess(final Thread cp)
@@ -75,8 +94,7 @@ public class ReceiverThread extends Thread
         {
             tmp = new byte[request.remaining()];
             request.get(tmp);
-            context.commandArgs = new String[] {
-                    new String(tmp)
+            context.commandArgs = new String[] { new String(tmp)
             };
         }
 
@@ -334,6 +352,13 @@ public class ReceiverThread extends Thread
         nl(out);
     }
 
+    /**
+     * <p>
+     * isRunning.
+     * </p>
+     *
+     * @return a boolean.
+     */
     public boolean isRunning()
     {
 
@@ -355,10 +380,8 @@ public class ReceiverThread extends Thread
     {
 
         for (int b = request.position(); b < request.limit(); b++)
-        {
             if (request.get(b) == aByte)
                 return b;
-        }
         return -1;
     }
 
@@ -371,6 +394,7 @@ public class ReceiverThread extends Thread
         }
     }
 
+    /** {@inheritDoc} */
     @SuppressWarnings("deprecation")
     @Override
     public void run()
@@ -380,7 +404,6 @@ public class ReceiverThread extends Thread
         {
             running = true;
             while (getReceiver().isRunning())
-            {
                 try
                 {
                     forkOffClientProcess(serverSocket.accept());
@@ -394,20 +417,17 @@ public class ReceiverThread extends Thread
                         logger.warn(e.getMessage());
                     continue;
                 }
-            }
         } finally
         {
             synchronized (clientProcesses)
             {
                 for (final Thread oneProcess : clientProcesses)
-                {
                     if (oneProcess != null)
                     {
                         logger.warn("interrupting " + oneProcess.getName());
                         oneProcess.interrupt();
                         oneProcess.stop();
                     }
-                }
             }
             try
             {
@@ -470,12 +490,9 @@ public class ReceiverThread extends Thread
 
         final ClientCommand cc = getReceiver().clientCommands.get(key.toLowerCase());
         if (cc == null)
-        {
             out.append("unknown command");
-        } else
-        {
+        else
             out.append(UsageBuilder.getWriter(cc.args, true).toString());
-        }
         nl(out);
         hr(out);
     }
