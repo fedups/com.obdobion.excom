@@ -6,7 +6,7 @@
 	<version>2.0.1</version>
 	<description>A command line tool to communicate with a running Java application.</description>
 	<name>${project.groupId}.${project.artifactId}</name>
-	<url>https://github.com/fedups/excom</url>
+	<url>https://github.com/fedups/com.obdobion.excom</url>
 	<organization>
 		<name>Obdobion</name>
 		<url>https://github.com/fedups</url>
@@ -26,9 +26,9 @@
 		</developer>
 	</developers>
 	<scm>
-		<connection>scm:git:git@github.com:fedups/excom.git</connection>
-		<developerConnection>scm:git:git@github.com:fedups/excom.git</developerConnection>
-		<url>git@github.com:fedups/excom.git</url>
+		<connection>scm:git:git@github.com:fedups/com.obdobion.excom.git</connection>
+		<developerConnection>scm:git:git@github.com:fedups/com.obdobion.excom.git</developerConnection>
+		<url>git@github.com:fedups/com.obdobion.excom.git</url>
 	</scm>
 
 	<properties>
@@ -40,6 +40,14 @@
 		<argument.version>4.1.2</argument.version>
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
 	</properties>
+
+	<distributionManagement>
+		<repository>
+			<id>bintray-fedups-obdobion</id>
+			<name>fedups-obdobion</name>
+			<url>https://api.bintray.com/maven/fedups/obdobion/com.obdobion.excom/;publish=1</url>
+		</repository>
+	</distributionManagement>
 
 	<build>
 		<plugins>
