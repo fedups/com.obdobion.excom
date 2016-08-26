@@ -5,7 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.nio.ByteBuffer;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +48,6 @@ public class ReceiverThread extends Thread
      */
     public ReceiverThread(final String name, final Receiver receiver, final ServerSocket serverSocket)
     {
-
         super(name);
         this.receiver = receiver;
         this.serverSocket = serverSocket;
@@ -58,7 +56,6 @@ public class ReceiverThread extends Thread
 
     private void addClientProcess(final Thread cp)
     {
-
         synchronized (clientProcesses)
         {
             clientProcesses.add(cp);
@@ -67,7 +64,6 @@ public class ReceiverThread extends Thread
 
     private ExComContext convertToContext(final byte[] b, final int length)
     {
-
         final ExComContext context = new ExComContext();
 
         final ByteBuffer request = ByteBuffer.wrap(b, 0, length);
@@ -82,7 +78,7 @@ public class ReceiverThread extends Thread
         request.get();
 
         context.logResult = request.get() == (byte) '1';
-        context.wait = request.get() == (byte) '1';
+        context.block = request.get() == (byte) '1';
         context.timeoutMS = request.getLong();
 
         /*
@@ -94,8 +90,7 @@ public class ReceiverThread extends Thread
         {
             tmp = new byte[request.remaining()];
             request.get(tmp);
-            context.commandArgs = new String[] { new String(tmp)
-            };
+            context.commandArgs = new String[] { new String(tmp) };
         }
 
         return context;
@@ -135,7 +130,6 @@ public class ReceiverThread extends Thread
 
     private ExComContext createContext(final Socket client, final StringBuilder out) throws Exception
     {
-
         final byte[] b = new byte[4096];
         final int cnt = client.getInputStream().read(b);
 
@@ -143,7 +137,7 @@ public class ReceiverThread extends Thread
 
         if (cnt < 0)
         {
-            showHelpTOC(client, out);
+            showHelpTOC(out);
             return null;
         }
 
@@ -154,9 +148,9 @@ public class ReceiverThread extends Thread
             if ("help".equalsIgnoreCase(context.commandName))
             {
                 if (context.commandArgs == null)
-                    showHelpTOC(client, out);
+                    showHelpTOC(out);
                 else
-                    showHelpTopic(client, context.commandArgs[0], out);
+                    showHelpTopic(context.commandArgs[0], out);
 
                 return null;
             }
@@ -181,7 +175,7 @@ public class ReceiverThread extends Thread
 
             if (((CmdLine) cc.args).isUsageRun())
             {
-                showHelpTopic(client, context.clientCommand.getCmdName(), out);
+                showHelpTopic(context.clientCommand.getCmdName(), out);
                 return null;
             }
 
@@ -192,9 +186,47 @@ public class ReceiverThread extends Thread
         }
     }
 
+    private Thread createTimeoutWatcherThread(final ExComContext watchingContext, final Thread watchingThread)
+    {
+        return new Thread("ExComTimeoutWatcher")
+        {
+            @SuppressWarnings("deprecation")
+            @Override
+            public void run()
+            {
+                try
+                {
+                    long timeout = -1;
+                    if (timeout == -1 && watchingContext.timeoutMS != -1)
+                        timeout = watchingContext.timeoutMS;
+                    if (timeout == -1 && watchingContext.clientCommand.getTimeoutMS() != -1)
+                        timeout = watchingContext.clientCommand.getTimeoutMS();
+                    if (timeout == -1)
+                        timeout = 0;
+                    watchingThread.join(timeout);
+                    if (watchingThread.isAlive() && !watchingThread.isInterrupted() && timeout > 0)
+                    {
+                        logger.warn("command timed out");
+                        watchingThread.interrupt();
+                        watchingThread.stop();
+                        watchingContext.clientCommand.duration = timeout;
+                        watchingContext.result = "timed-out";
+                    }
+                } catch (final InterruptedException e)
+                {
+                    logger.warn("command interrupted");
+                    watchingThread.stop();
+                    watchingContext.result = "interrupted";
+                } finally
+                {
+                    logger.trace("complete");
+                }
+            }
+        };
+    }
+
     private String fixedWidth(final String source, final int width)
     {
-
         final StringBuilder fw = new StringBuilder();
         fw.append(source);
         for (int w = width - source.length(); w > 0; w--)
@@ -205,41 +237,32 @@ public class ReceiverThread extends Thread
     }
 
     @SuppressWarnings("deprecation")
-    private void forkAndTime(Thread commandThread, final ExComContext context)
+    private void forkAndTime(final Thread commandThread, final ExComContext context)
     {
         logger.trace("start");
         commandThread.start();
-        try
-        {
-            long timeout = -1;
-            if (timeout == -1 && context.timeoutMS != -1)
-                timeout = context.timeoutMS;
-            if (timeout == -1 && context.clientCommand.getTimeoutMS() != -1)
-                timeout = context.clientCommand.getTimeoutMS();
-            if (timeout == -1)
-                timeout = 0;
-            commandThread.join(timeout);
-            if (commandThread.isAlive() && !commandThread.isInterrupted() && timeout > 0)
+        final Thread timeoutWatcher = createTimeoutWatcherThread(context, commandThread);
+        timeoutWatcher.start();
+        if (context.block)
+            try
             {
-                logger.warn("command timed out");
-                commandThread.interrupt();
+                timeoutWatcher.join();
+            } catch (final InterruptedException e)
+            {
+                logger.warn("command interrupted");
                 commandThread.stop();
-                context.clientCommand.duration = timeout;
-                context.result = "timed-out";
+                context.result = "interrupted";
+            } finally
+            {
             }
-        } catch (final InterruptedException e)
+        else
         {
-            logger.warn("command interrupted");
-            commandThread.stop();
-            context.result = "interrupted";
-        } finally
-        {
-            commandThread = null;
-            logger.trace("complete");
+            context.result = "asynchronous";
+            logger.trace("returning to caller without waiting for completion (async)");
         }
     }
 
-    private void forkOffClientProcess(final Socket client) throws IOException
+    private void forkOffClientProcess(final Socket client)
     {
         ExComContext context = null;
 
@@ -341,15 +364,7 @@ public class ReceiverThread extends Thread
 
     private Receiver getReceiver()
     {
-
         return receiver;
-    }
-
-    private void hr(final StringBuilder out)
-    {
-
-        out.append("=========================================================");
-        nl(out);
     }
 
     /**
@@ -361,7 +376,6 @@ public class ReceiverThread extends Thread
      */
     public boolean isRunning()
     {
-
         return running;
     }
 
@@ -372,7 +386,6 @@ public class ReceiverThread extends Thread
 
     private void nl(final StringBuilder out)
     {
-
         out.append("\n");
     }
 
@@ -443,9 +456,8 @@ public class ReceiverThread extends Thread
 
     }
 
-    private void showHelpTOC(final Socket client, final StringBuilder out) throws IOException
+    private void showHelpTOC(final StringBuilder out)
     {
-
         /*
          * Compute the largest cmdname for fixed width. And sort them for
          * display.
@@ -460,10 +472,10 @@ public class ReceiverThread extends Thread
                 maxWidth = cnw;
         }
 
-        hr(out);
-        out.append("Help Table of Contents  (case does not matter)");
+        out.append("Commands");
         nl(out);
-        hr(out);
+        out.append("--------");
+        nl(out);
 
         for (final String sn : sortedNames)
         {
@@ -476,24 +488,23 @@ public class ReceiverThread extends Thread
             }
             nl(out);
         }
-        hr(out);
+        // hr(out);
     }
 
-    private void showHelpTopic(final Socket client, final String key, final StringBuilder out)
-            throws IOException, ParseException
+    private void showHelpTopic(final String key, final StringBuilder out)
     {
 
-        hr(out);
-        out.append("Help for \"").append(key).append("\"");
-        nl(out);
-        hr(out);
+        // hr(out);
+        // out.append("Help for \"").append(key).append("\"");
+        // nl(out);
+        // hr(out);
 
         final ClientCommand cc = getReceiver().clientCommands.get(key.toLowerCase());
         if (cc == null)
             out.append("unknown command");
         else
             out.append(UsageBuilder.getWriter(cc.args, true).toString());
-        nl(out);
-        hr(out);
+        // nl(out);
+        // hr(out);
     }
 }

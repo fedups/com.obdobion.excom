@@ -1,12 +1,20 @@
 package com.obdobion.excom;
 
-import org.apache.log4j.Logger;
 import org.junit.Test;
 
+import com.obdobion.argument.CmdLine;
 import com.obdobion.argument.annotation.Arg;
+import com.obdobion.howto.App;
+import com.obdobion.howto.Config;
+import com.obdobion.howto.Context;
+import com.obdobion.howto.PluginManager;
+
+import junit.framework.Assert;
 
 /**
- * <p>HelpTests class.</p>
+ * <p>
+ * HelpTests class.
+ * </p>
  *
  * @author Chris DeGreef fedupforone@gmail.com
  * @since 2.0.1
@@ -18,18 +26,20 @@ public class HelpTests
         @Arg
         public String myParm;
 
+        @Override
         public String execute(final ClientCommand cc) throws Exception
         {
             return myParm;
         }
     }
 
-    Logger log = Logger.getLogger("");
-
     /**
-     * <p>testHelpTOC.</p>
+     * <p>
+     * testHelpTOC.
+     * </p>
      *
-     * @throws java.lang.Exception if any.
+     * @throws java.lang.Exception
+     *             if any.
      */
     @Test
     public void testHelpTOC() throws Exception
@@ -39,8 +49,20 @@ public class HelpTests
         try
         {
             rcvr.go();
-            final ExComContext result = new Sender(2526).send(new ExComContext("help"));
-            System.out.println(result.toString());
+
+            final Config config = new Config(".");
+            final Context context = PluginManager.createContext(config, new PluginManager(config));
+            final Sender sender = new Sender();
+            context.setParser(CmdLine.load(sender, "-h localhost -p 2526 -n testHelpTOC"));
+            final int bytesReceived = sender.processInputRequest(context, "help");
+            App.destroyContext(context);
+
+            Assert.assertEquals(80, bytesReceived);
+            Assert.assertEquals("Commands\n" +
+                    "--------\n"
+                    + "testWithParms - This is a test command - nothing to see here.\n",
+                    context.getOutline().getWriter().toString());
+
         } finally
         {
             rcvr.stop();
@@ -48,9 +70,12 @@ public class HelpTests
     }
 
     /**
-     * <p>testHelpTopic.</p>
+     * <p>
+     * testHelpTopic.
+     * </p>
      *
-     * @throws java.lang.Exception if any.
+     * @throws java.lang.Exception
+     *             if any.
      */
     @Test
     public void testHelpTopic() throws Exception
@@ -60,8 +85,16 @@ public class HelpTests
         try
         {
             rcvr.go();
-            final ExComContext result = new Sender(2526).send(new ExComContext("help", "testWithParms"));
-            System.out.println(result.toString());
+
+            final Config config = new Config(".");
+            final Context context = PluginManager.createContext(config, new PluginManager(config));
+            final Sender sender = new Sender();
+            context.setParser(CmdLine.load(sender, "-h localhost -p 2526 -n testWithParms"));
+            final int bytesReceived = sender.processInputRequest(context, "help testWithParms");
+            App.destroyContext(context);
+
+            Assert.assertEquals(13, bytesReceived);
+            Assert.assertEquals("testWithParms\n", context.getOutline().getWriter().toString());
         } finally
         {
             rcvr.stop();
@@ -69,9 +102,12 @@ public class HelpTests
     }
 
     /**
-     * <p>testHelpTopicQuestionMark.</p>
+     * <p>
+     * testHelpTopicQuestionMark.
+     * </p>
      *
-     * @throws java.lang.Exception if any.
+     * @throws java.lang.Exception
+     *             if any.
      */
     @Test
     public void testHelpTopicQuestionMark() throws Exception
@@ -81,8 +117,15 @@ public class HelpTests
         try
         {
             rcvr.go();
-            final ExComContext result = new Sender(2526).send(new ExComContext("testWithParms", "-?"));
-            System.out.println(result.toString());
+
+            final Config config = new Config(".");
+            final Context context = PluginManager.createContext(config, new PluginManager(config));
+            final Sender sender = new Sender();
+            context.setParser(CmdLine.load(sender, "-h localhost -p 2526 -n testWithParms"));
+            final int bytesReceived = sender.processInputRequest(context, "testWithParms --help");
+            App.destroyContext(context);
+
+            Assert.assertEquals(40, bytesReceived);
         } finally
         {
             rcvr.stop();

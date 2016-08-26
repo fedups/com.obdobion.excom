@@ -83,6 +83,7 @@ public class Receiver
      * <p>createCommand.</p>
      *
      * @param cmdName a {@link java.lang.String} object.
+     * @param cmdName a {@link java.lang.String} object.
      * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
      * @return a {@link com.obdobion.excom.ClientCommand} object.
      * @throws java.text.ParseException if any.
@@ -98,6 +99,7 @@ public class Receiver
      * <p>createCommand.</p>
      *
      * @param title a {@link java.lang.String} object.
+     * @param cmdName a {@link java.lang.String} object.
      * @param cmdName a {@link java.lang.String} object.
      * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
      * @return a {@link com.obdobion.excom.ClientCommand} object.
@@ -222,6 +224,7 @@ public class Receiver
      * <p>register.</p>
      *
      * @param cmdName a {@link java.lang.String} object.
+     * @param cmdName a {@link java.lang.String} object.
      * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
      * @return a {@link com.obdobion.excom.Receiver} object.
      * @throws java.text.ParseException if any.
@@ -236,6 +239,7 @@ public class Receiver
      * <p>register.</p>
      *
      * @param title a {@link java.lang.String} object.
+     * @param cmdName a {@link java.lang.String} object.
      * @param cmdName a {@link java.lang.String} object.
      * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
      * @return a {@link com.obdobion.excom.Receiver} object.
@@ -337,9 +341,9 @@ public class Receiver
         {
             logger.trace("stopping");
             /*
-             * This little wait is probably only needed for test cases. It keeps
+             * This little block is probably only needed for test cases. It keeps
              * the receiver from stopping before the command can make it across
-             * from the sender. Test cases, especially when run with no-wait,
+             * from the sender. Test cases, especially when run with no-block,
              * can easily overrun the efficiency of the TCP connection.
              */
             synchronized (this)

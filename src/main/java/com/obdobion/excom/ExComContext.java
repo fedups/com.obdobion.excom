@@ -1,7 +1,9 @@
 package com.obdobion.excom;
 
 /**
- * <p>ExComContext class.</p>
+ * <p>
+ * ExComContext class.
+ * </p>
  *
  * @author Chris DeGreef fedupforone@gmail.com
  */
@@ -13,56 +15,69 @@ public class ExComContext
     boolean                 logResult;
     String                  result;
     long                    timeoutMS;
-    boolean                 wait;
+    boolean                 block;
 
     /**
-     * <p>Constructor for ExComContext.</p>
+     * <p>
+     * Constructor for ExComContext.
+     * </p>
      */
     public ExComContext()
     {
-        this.wait = true;
-        this.timeoutMS = -1;
+        block = true;
+        timeoutMS = -1;
     }
 
     /**
-     * <p>Constructor for ExComContext.</p>
+     * <p>
+     * Constructor for ExComContext.
+     * </p>
      *
+     * @param commandName
+     *            a {@link java.lang.String} object.
+     * @param commandArgs
+     *            a {@link java.lang.String} object.
      * @param wait a boolean.
-     * @param commandName a {@link java.lang.String} object.
-     * @param commandArgs a {@link java.lang.String} object.
      */
     public ExComContext(final boolean wait, final String commandName, final String... commandArgs)
     {
         this.commandName = commandName;
         this.commandArgs = commandArgs;
-        this.wait = wait;
-        this.timeoutMS = -1;
+        this.block = wait;
+        timeoutMS = -1;
     }
 
     /**
-     * <p>Constructor for ExComContext.</p>
+     * <p>
+     * Constructor for ExComContext.
+     * </p>
      *
-     * @param commandName a {@link java.lang.String} object.
+     * @param commandName
+     *            a {@link java.lang.String} object.
      */
     public ExComContext(final String commandName)
     {
         this.commandName = commandName;
-        this.wait = true;
-        this.timeoutMS = -1;
+        block = true;
+        timeoutMS = -1;
     }
 
     /**
-     * <p>Constructor for ExComContext.</p>
+     * <p>
+     * Constructor for ExComContext.
+     * </p>
      *
-     * @param commandName a {@link java.lang.String} object.
-     * @param commandArgs a {@link java.lang.String} object.
+     * @param commandName
+     *            a {@link java.lang.String} object.
+     * @param commandArgs
+     *            a {@link java.lang.String} object.
      */
     public ExComContext(final String commandName, final String... commandArgs)
     {
         this.commandName = commandName;
         this.commandArgs = commandArgs;
-        this.wait = true;
-        this.timeoutMS = -1;
+        block = true;
+        timeoutMS = -1;
     }
 
     /**
