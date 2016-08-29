@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.obdobion</groupId>
 	<artifactId>excom</artifactId>
-	<version>3.0.0</version>
+	<version>3.1.0</version>
 	<description>A command line tool to communicate with a running Java application.</description>
 	<name>${project.groupId}.${project.artifactId}</name>
 	<url>https://github.com/fedups/com.obdobion.excom</url>
@@ -38,8 +38,8 @@
 		<log4j.version>1.2.17</log4j.version>
 		<slf4j.version>1.7.13</slf4j.version>
 		
-		<argument.version>4.2.3</argument.version>
-		<howto.version>1.0.0</howto.version>
+		<argument.version>4.3.0</argument.version>
+		<howto.version>1.1.0</howto.version>
 		
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
 	</properties>
