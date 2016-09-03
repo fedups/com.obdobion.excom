@@ -115,8 +115,7 @@ public class ReceiverThread extends Thread
                     end = System.currentTimeMillis();
                     context.clientCommand.duration = end - start;
                 } catch (final InterruptedException e)
-                {
-                } catch (final Exception e)
+                {} catch (final Exception e)
                 {
                     logger.error(e.getMessage(), e);
                     context.result = e.getMessage();
@@ -253,8 +252,7 @@ public class ReceiverThread extends Thread
                 commandThread.stop();
                 context.result = "interrupted";
             } finally
-            {
-            }
+            {}
         else
         {
             context.result = "asynchronous";
@@ -503,7 +501,7 @@ public class ReceiverThread extends Thread
         if (cc == null)
             out.append("unknown command");
         else
-            out.append(UsageBuilder.getWriter(cc.args, true).toString());
+            out.append(UsageBuilder.getWriter(cc.args, 3).toString());
         // nl(out);
         // hr(out);
     }
