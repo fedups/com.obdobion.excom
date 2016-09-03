@@ -33,10 +33,8 @@ public class ExComContext
      * Constructor for ExComContext.
      * </p>
      *
-     * @param commandName
-     *            a {@link java.lang.String} object.
-     * @param commandArgs
-     *            a {@link java.lang.String} object.
+     * @param commandName a {@link java.lang.String} object.
+     * @param commandArgs a {@link java.lang.String} object.
      * @param wait a boolean.
      */
     public ExComContext(final boolean wait, final String commandName, final String... commandArgs)
@@ -52,8 +50,7 @@ public class ExComContext
      * Constructor for ExComContext.
      * </p>
      *
-     * @param commandName
-     *            a {@link java.lang.String} object.
+     * @param commandName a {@link java.lang.String} object.
      */
     public ExComContext(final String commandName)
     {
@@ -67,10 +64,8 @@ public class ExComContext
      * Constructor for ExComContext.
      * </p>
      *
-     * @param commandName
-     *            a {@link java.lang.String} object.
-     * @param commandArgs
-     *            a {@link java.lang.String} object.
+     * @param commandName a {@link java.lang.String} object.
+     * @param commandArgs a {@link java.lang.String} object.
      */
     public ExComContext(final String commandName, final String... commandArgs)
     {

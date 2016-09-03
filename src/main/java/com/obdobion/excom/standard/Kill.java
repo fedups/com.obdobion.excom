@@ -5,7 +5,9 @@ import com.obdobion.excom.ClientCommand;
 import com.obdobion.excom.IExternalRequest;
 
 /**
- * <p>Kill class.</p>
+ * <p>
+ * Kill class.
+ * </p>
  *
  * @author Chris DeGreef fedupforone@gmail.com
  */
@@ -25,28 +27,28 @@ public class Kill implements IExternalRequest
     {
         switch (exitCode)
         {
-        case 0:
-            (new Thread("Kill")
-            {
-                @Override
-                public void run()
+            case 0:
+                (new Thread("Kill")
                 {
-                    System.exit(exitCode);
-                }
-            }).start();
-            break;
-        case 9:
-            (new Thread("Kill")
-            {
-                @Override
-                public void run()
+                    @Override
+                    public void run()
+                    {
+                        System.exit(exitCode);
+                    }
+                }).start();
+                break;
+            case 9:
+                (new Thread("Kill")
                 {
-                    Runtime.getRuntime().halt(exitCode);
-                }
-            }).start();
-            break;
-        default:
-            return "kill " + exitCode + " is not a supported exit code";
+                    @Override
+                    public void run()
+                    {
+                        Runtime.getRuntime().halt(exitCode);
+                    }
+                }).start();
+                break;
+            default:
+                return "kill " + exitCode + " is not a supported exit code";
         }
 
         return "ok";

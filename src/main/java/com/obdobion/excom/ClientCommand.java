@@ -3,7 +3,9 @@ package com.obdobion.excom;
 import com.obdobion.argument.ICmdLine;
 
 /**
- * <p>ClientCommand class.</p>
+ * <p>
+ * ClientCommand class.
+ * </p>
  *
  * @author Chris DeGreef fedupforone@gmail.com
  */
@@ -18,7 +20,9 @@ public class ClientCommand
     String           title;
 
     /**
-     * <p>Constructor for ClientCommand.</p>
+     * <p>
+     * Constructor for ClientCommand.
+     * </p>
      *
      * @param title a {@link java.lang.String} object.
      * @param cmdName a {@link java.lang.String} object.
@@ -35,7 +39,9 @@ public class ClientCommand
     }
 
     /**
-     * <p>Getter for the field <code>args</code>.</p>
+     * <p>
+     * Getter for the field <code>args</code>.
+     * </p>
      *
      * @return a {@link com.obdobion.argument.ICmdLine} object.
      */
@@ -45,7 +51,9 @@ public class ClientCommand
     }
 
     /**
-     * <p>Getter for the field <code>cmdName</code>.</p>
+     * <p>
+     * Getter for the field <code>cmdName</code>.
+     * </p>
      *
      * @return a {@link java.lang.String} object.
      */
@@ -55,7 +63,9 @@ public class ClientCommand
     }
 
     /**
-     * <p>Getter for the field <code>command</code>.</p>
+     * <p>
+     * Getter for the field <code>command</code>.
+     * </p>
      *
      * @return a {@link com.obdobion.excom.IExternalRequest} object.
      */
@@ -65,7 +75,9 @@ public class ClientCommand
     }
 
     /**
-     * <p>Getter for the field <code>timeoutMS</code>.</p>
+     * <p>
+     * Getter for the field <code>timeoutMS</code>.
+     * </p>
      *
      * @return a long.
      */
@@ -75,7 +87,9 @@ public class ClientCommand
     }
 
     /**
-     * <p>Getter for the field <code>title</code>.</p>
+     * <p>
+     * Getter for the field <code>title</code>.
+     * </p>
      *
      * @return a {@link java.lang.String} object.
      */
@@ -85,7 +99,9 @@ public class ClientCommand
     }
 
     /**
-     * <p>Setter for the field <code>args</code>.</p>
+     * <p>
+     * Setter for the field <code>args</code>.
+     * </p>
      *
      * @param args a {@link com.obdobion.argument.ICmdLine} object.
      */
@@ -95,7 +111,9 @@ public class ClientCommand
     }
 
     /**
-     * <p>Setter for the field <code>cmdName</code>.</p>
+     * <p>
+     * Setter for the field <code>cmdName</code>.
+     * </p>
      *
      * @param cmdName a {@link java.lang.String} object.
      */
@@ -105,7 +123,9 @@ public class ClientCommand
     }
 
     /**
-     * <p>Setter for the field <code>command</code>.</p>
+     * <p>
+     * Setter for the field <code>command</code>.
+     * </p>
      *
      * @param command a {@link com.obdobion.excom.IExternalRequest} object.
      */
@@ -115,7 +135,9 @@ public class ClientCommand
     }
 
     /**
-     * <p>Setter for the field <code>timeoutMS</code>.</p>
+     * <p>
+     * Setter for the field <code>timeoutMS</code>.
+     * </p>
      *
      * @param timeoutMS a long.
      */
@@ -125,7 +147,9 @@ public class ClientCommand
     }
 
     /**
-     * <p>Setter for the field <code>title</code>.</p>
+     * <p>
+     * Setter for the field <code>title</code>.
+     * </p>
      *
      * @param title a {@link java.lang.String} object.
      */

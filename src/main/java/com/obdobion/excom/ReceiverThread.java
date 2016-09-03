@@ -39,12 +39,9 @@ public class ReceiverThread extends Thread
      * Constructor for ReceiverThread.
      * </p>
      *
-     * @param name
-     *            a {@link java.lang.String} object.
-     * @param receiver
-     *            a {@link com.obdobion.excom.Receiver} object.
-     * @param serverSocket
-     *            a {@link java.net.ServerSocket} object.
+     * @param name a {@link java.lang.String} object.
+     * @param receiver a {@link com.obdobion.excom.Receiver} object.
+     * @param serverSocket a {@link java.net.ServerSocket} object.
      */
     public ReceiverThread(final String name, final Receiver receiver, final ServerSocket serverSocket)
     {

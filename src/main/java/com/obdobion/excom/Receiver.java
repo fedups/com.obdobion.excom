@@ -61,8 +61,7 @@ public class Receiver
      * Constructor for Receiver.
      * </p>
      *
-     * @param _port
-     *            a int.
+     * @param _port a int.
      */
     public Receiver(final int _port)
     {
@@ -76,10 +75,8 @@ public class Receiver
      * Constructor for Receiver.
      * </p>
      *
-     * @param _host
-     *            a {@link java.lang.String} object.
-     * @param _port
-     *            a int.
+     * @param _host a {@link java.lang.String} object.
+     * @param _port a int.
      */
     public Receiver(final String _host, final int _port)
     {
@@ -93,15 +90,11 @@ public class Receiver
      * createCommand.
      * </p>
      *
-     * @param cmdName
-     *            a {@link java.lang.String} object.
-     * @param cmd
-     *            a {@link com.obdobion.excom.IExternalRequest} object.
+     * @param cmdName a {@link java.lang.String} object.
+     * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
      * @return a {@link com.obdobion.excom.ClientCommand} object.
-     * @throws java.text.ParseException
-     *             if any.
-     * @throws java.io.IOException
-     *             if any.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
      */
     public ClientCommand createCommand(final String cmdName, final IExternalRequest cmd)
             throws ParseException, IOException
@@ -114,17 +107,12 @@ public class Receiver
      * createCommand.
      * </p>
      *
-     * @param title
-     *            a {@link java.lang.String} object.
-     * @param cmdName
-     *            a {@link java.lang.String} object.
-     * @param cmd
-     *            a {@link com.obdobion.excom.IExternalRequest} object.
+     * @param title a {@link java.lang.String} object.
+     * @param cmdName a {@link java.lang.String} object.
+     * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
      * @return a {@link com.obdobion.excom.ClientCommand} object.
-     * @throws java.text.ParseException
-     *             if any.
-     * @throws java.io.IOException
-     *             if any.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
      */
     public ClientCommand createCommand(
             final String title,
@@ -178,8 +166,7 @@ public class Receiver
      * go.
      * </p>
      *
-     * @throws java.io.IOException
-     *             if any.
+     * @throws java.io.IOException if any.
      */
     public void go() throws IOException
     {
@@ -231,13 +218,10 @@ public class Receiver
      * register.
      * </p>
      *
-     * @param cc
-     *            a {@link com.obdobion.excom.ClientCommand} object.
+     * @param cc a {@link com.obdobion.excom.ClientCommand} object.
      * @return a {@link com.obdobion.excom.Receiver} object.
-     * @throws java.text.ParseException
-     *             if any.
-     * @throws java.io.IOException
-     *             if any.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
      */
     public Receiver register(final ClientCommand cc) throws ParseException, IOException
     {
@@ -259,15 +243,11 @@ public class Receiver
      * register.
      * </p>
      *
-     * @param cmdName
-     *            a {@link java.lang.String} object.
-     * @param cmd
-     *            a {@link com.obdobion.excom.IExternalRequest} object.
+     * @param cmdName a {@link java.lang.String} object.
+     * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
      * @return a {@link com.obdobion.excom.Receiver} object.
-     * @throws java.text.ParseException
-     *             if any.
-     * @throws java.io.IOException
-     *             if any.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
      */
     public Receiver register(final String cmdName, final IExternalRequest cmd) throws ParseException, IOException
     {
@@ -279,17 +259,12 @@ public class Receiver
      * register.
      * </p>
      *
-     * @param title
-     *            a {@link java.lang.String} object.
-     * @param cmdName
-     *            a {@link java.lang.String} object.
-     * @param cmd
-     *            a {@link com.obdobion.excom.IExternalRequest} object.
+     * @param title a {@link java.lang.String} object.
+     * @param cmdName a {@link java.lang.String} object.
+     * @param cmd a {@link com.obdobion.excom.IExternalRequest} object.
      * @return a {@link com.obdobion.excom.Receiver} object.
-     * @throws java.text.ParseException
-     *             if any.
-     * @throws java.io.IOException
-     *             if any.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
      */
     public Receiver register(final String title, final String cmdName, final IExternalRequest cmd)
             throws ParseException, IOException
@@ -303,10 +278,8 @@ public class Receiver
      * </p>
      *
      * @return a {@link com.obdobion.excom.Receiver} object.
-     * @throws java.text.ParseException
-     *             if any.
-     * @throws java.io.IOException
-     *             if any.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
      */
     public Receiver registerStandard() throws ParseException, IOException
     {
@@ -318,13 +291,10 @@ public class Receiver
      * registerStandard.
      * </p>
      *
-     * @param prefix
-     *            a {@link java.lang.String} object.
+     * @param prefix a {@link java.lang.String} object.
      * @return a {@link com.obdobion.excom.Receiver} object.
-     * @throws java.text.ParseException
-     *             if any.
-     * @throws java.io.IOException
-     *             if any.
+     * @throws java.text.ParseException if any.
+     * @throws java.io.IOException if any.
      */
     public Receiver registerStandard(final String prefix) throws ParseException, IOException
     {
@@ -350,8 +320,7 @@ public class Receiver
      * Setter for the field <code>commandsToBeRegistered</code>.
      * </p>
      *
-     * @param commandsToBeRegistered
-     *            a {@link java.util.List} object.
+     * @param commandsToBeRegistered a {@link java.util.List} object.
      */
     public void setCommandsToBeRegistered(final List<CommandWrapper> commandsToBeRegistered)
     {
@@ -363,8 +332,7 @@ public class Receiver
      * Setter for the field <code>host</code>.
      * </p>
      *
-     * @param _host
-     *            a {@link java.lang.String} object.
+     * @param _host a {@link java.lang.String} object.
      */
     public void setHost(final String _host)
     {
@@ -376,8 +344,7 @@ public class Receiver
      * Setter for the field <code>port</code>.
      * </p>
      *
-     * @param port
-     *            a int.
+     * @param port a int.
      */
     public void setPort(final int port)
     {
@@ -389,8 +356,7 @@ public class Receiver
      * Setter for the field <code>running</code>.
      * </p>
      *
-     * @param running
-     *            a boolean.
+     * @param running a boolean.
      */
     public void setRunning(final boolean running)
     {

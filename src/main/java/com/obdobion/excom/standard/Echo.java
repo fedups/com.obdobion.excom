@@ -7,7 +7,9 @@ import com.obdobion.excom.ClientCommand;
 import com.obdobion.excom.IExternalRequest;
 
 /**
- * <p>Echo class.</p>
+ * <p>
+ * Echo class.
+ * </p>
  *
  * @author Chris DeGreef fedupforone@gmail.com
  */

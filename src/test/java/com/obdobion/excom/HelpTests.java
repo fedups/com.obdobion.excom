@@ -38,8 +38,7 @@ public class HelpTests
      * testHelpTOC.
      * </p>
      *
-     * @throws java.lang.Exception
-     *             if any.
+     * @throws java.lang.Exception if any.
      */
     @Test
     public void testHelpTOC() throws Exception
@@ -74,8 +73,7 @@ public class HelpTests
      * testHelpTopic.
      * </p>
      *
-     * @throws java.lang.Exception
-     *             if any.
+     * @throws java.lang.Exception if any.
      */
     @Test
     public void testHelpTopic() throws Exception
@@ -106,8 +104,7 @@ public class HelpTests
      * testHelpTopicQuestionMark.
      * </p>
      *
-     * @throws java.lang.Exception
-     *             if any.
+     * @throws java.lang.Exception if any.
      */
     @Test
     public void testHelpTopicQuestionMark() throws Exception

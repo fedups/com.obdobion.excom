@@ -6,7 +6,9 @@ import com.obdobion.excom.ClientCommand;
 import com.obdobion.excom.IExternalRequest;
 
 /**
- * <p>GC class.</p>
+ * <p>
+ * GC class.
+ * </p>
  *
  * @author Chris DeGreef fedupforone@gmail.com
  */

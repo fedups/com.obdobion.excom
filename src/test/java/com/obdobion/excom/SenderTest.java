@@ -39,8 +39,7 @@ public class SenderTest
      * abortingAHungThreadCCTimer.
      * </p>
      *
-     * @throws java.lang.Exception
-     *             if any.
+     * @throws java.lang.Exception if any.
      */
     @Test
     public void abortingAHungThreadCCTimer() throws Exception
@@ -95,8 +94,7 @@ public class SenderTest
      * abortingAHungThreadContextTimer.
      * </p>
      *
-     * @throws java.lang.Exception
-     *             if any.
+     * @throws java.lang.Exception if any.
      */
     @Test
     public void abortingAHungThreadContextTimer() throws Exception
@@ -152,8 +150,7 @@ public class SenderTest
      * targetPortNotUp.
      * </p>
      *
-     * @throws java.lang.Exception
-     *             if any.
+     * @throws java.lang.Exception if any.
      */
     @Test
     public void targetPortNotUp() throws Exception
@@ -176,8 +173,7 @@ public class SenderTest
      * testNeverEndingCommand.
      * </p>
      *
-     * @throws java.lang.Exception
-     *             if any.
+     * @throws java.lang.Exception if any.
      */
     @Test
     public void testNeverEndingCommand() throws Exception

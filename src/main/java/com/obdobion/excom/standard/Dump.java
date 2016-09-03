@@ -8,7 +8,9 @@ import com.obdobion.excom.ClientCommand;
 import com.obdobion.excom.IExternalRequest;
 
 /**
- * <p>Dump class.</p>
+ * <p>
+ * Dump class.
+ * </p>
  *
  * @author Chris DeGreef fedupforone@gmail.com
  */

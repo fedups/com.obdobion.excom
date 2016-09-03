@@ -69,8 +69,7 @@ public class Sender implements IPluginCommand
      * </p>
      */
     public Sender()
-    {
-    }
+    {}
 
     private int communicateWithRemoteHost() throws IOException, SocketException
     {
@@ -389,8 +388,7 @@ public class Sender implements IPluginCommand
      * Setter for the field <code>asynchronous</code>.
      * </p>
      *
-     * @param asynchronous
-     *            a boolean.
+     * @param asynchronous a boolean.
      * @since 3.0.0
      */
     public void setAsynchronous(final boolean asynchronous)
@@ -403,8 +401,7 @@ public class Sender implements IPluginCommand
      * Setter for the field <code>consoleInputThread</code>.
      * </p>
      *
-     * @param consoleInputThread
-     *            a {@link java.lang.Thread} object.
+     * @param consoleInputThread a {@link java.lang.Thread} object.
      * @since 3.0.0
      */
     public void setConsoleInputThread(final Thread consoleInputThread)
@@ -417,8 +414,7 @@ public class Sender implements IPluginCommand
      * Setter for the field <code>host</code>.
      * </p>
      *
-     * @param host
-     *            a {@link java.lang.String} object.
+     * @param host a {@link java.lang.String} object.
      * @since 3.0.0
      */
     public void setHost(final String host)
@@ -431,8 +427,7 @@ public class Sender implements IPluginCommand
      * Setter for the field <code>logResult</code>.
      * </p>
      *
-     * @param logResult
-     *            a boolean.
+     * @param logResult a boolean.
      * @since 3.0.0
      */
     public void setLogResult(final boolean logResult)
@@ -445,8 +440,7 @@ public class Sender implements IPluginCommand
      * Setter for the field <code>port</code>.
      * </p>
      *
-     * @param port
-     *            a int.
+     * @param port a int.
      * @since 3.0.0
      */
     public void setPort(final int port)
@@ -459,8 +453,7 @@ public class Sender implements IPluginCommand
      * Setter for the field <code>remoteName</code>.
      * </p>
      *
-     * @param remoteName
-     *            a {@link java.lang.String} object.
+     * @param remoteName a {@link java.lang.String} object.
      * @since 3.0.0
      */
     public void setRemoteName(final String remoteName)
@@ -473,8 +466,7 @@ public class Sender implements IPluginCommand
      * Setter for the field <code>socket</code>.
      * </p>
      *
-     * @param socket
-     *            a {@link java.net.Socket} object.
+     * @param socket a {@link java.net.Socket} object.
      * @since 3.0.0
      */
     public void setSocket(final Socket socket)
@@ -487,8 +479,7 @@ public class Sender implements IPluginCommand
      * Setter for the field <code>stop</code>.
      * </p>
      *
-     * @param stop
-     *            a boolean.
+     * @param stop a boolean.
      * @since 3.0.0
      */
     public void setStop(final boolean stop)

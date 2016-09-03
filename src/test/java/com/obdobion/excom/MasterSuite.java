@@ -15,5 +15,4 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({ HelpTests.class, SenderTest.class })
 public class MasterSuite
-{
-}
+{}

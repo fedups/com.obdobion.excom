@@ -3,7 +3,9 @@ package com.obdobion.excom.spring;
 import com.obdobion.excom.IExternalRequest;
 
 /**
- * <p>CommandWrapper class.</p>
+ * <p>
+ * CommandWrapper class.
+ * </p>
  *
  * @author Chris DeGreef fedupforone@gmail.com
  */
@@ -14,7 +16,9 @@ public class CommandWrapper
     private String           title;
 
     /**
-     * <p>Getter for the field <code>command</code>.</p>
+     * <p>
+     * Getter for the field <code>command</code>.
+     * </p>
      *
      * @return a {@link com.obdobion.excom.IExternalRequest} object.
      */
@@ -24,7 +28,9 @@ public class CommandWrapper
     }
 
     /**
-     * <p>Getter for the field <code>commandName</code>.</p>
+     * <p>
+     * Getter for the field <code>commandName</code>.
+     * </p>
      *
      * @return a {@link java.lang.String} object.
      */
@@ -34,7 +40,9 @@ public class CommandWrapper
     }
 
     /**
-     * <p>Getter for the field <code>title</code>.</p>
+     * <p>
+     * Getter for the field <code>title</code>.
+     * </p>
      *
      * @return a {@link java.lang.String} object.
      */
@@ -44,7 +52,9 @@ public class CommandWrapper
     }
 
     /**
-     * <p>Setter for the field <code>command</code>.</p>
+     * <p>
+     * Setter for the field <code>command</code>.
+     * </p>
      *
      * @param command a {@link com.obdobion.excom.IExternalRequest} object.
      */
@@ -54,7 +64,9 @@ public class CommandWrapper
     }
 
     /**
-     * <p>Setter for the field <code>commandName</code>.</p>
+     * <p>
+     * Setter for the field <code>commandName</code>.
+     * </p>
      *
      * @param commandName a {@link java.lang.String} object.
      */
@@ -64,7 +76,9 @@ public class CommandWrapper
     }
 
     /**
-     * <p>Setter for the field <code>title</code>.</p>
+     * <p>
+     * Setter for the field <code>title</code>.
+     * </p>
      *
      * @param title a {@link java.lang.String} object.
      */
