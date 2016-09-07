@@ -164,7 +164,7 @@ public class SenderTest
         App.destroyContext(context);
 
         Assert.assertEquals("targetPortNotUp result",
-                "Connection refused: connect\n",
+                "Connection refused: connect",
                 context.getOutline().getWriter().toString());
     }
 
