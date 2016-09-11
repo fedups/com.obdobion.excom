@@ -35,10 +35,7 @@
 		<java.target.version>1.8</java.target.version>
 		<java.source.version>1.8</java.source.version>
 		<junit.version>4.8.1</junit.version>
-		<log4j.version>1.2.17</log4j.version>
-		<slf4j.version>1.7.13</slf4j.version>
 		
-		<argument.version>4.3.5</argument.version>
 		<howto.version>1.2.0</howto.version>
 		
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
@@ -66,6 +63,16 @@
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
 				<version>3.0.0</version>
+				<configuration>
+					<filesets>
+						<fileset>
+							<directory>docs</directory>
+							<includes>
+								<include>**/*</include>
+							</includes>
+						</fileset>
+					</filesets>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -91,6 +98,10 @@
 				<configuration>
 					<defaultAuthor>Chris DeGreef fedupforone@gmail.com</defaultAuthor>
 					<fixTags>author,since,param,return,throws,link</fixTags>
+					<outputDirectory>docs</outputDirectory>
+					<notimestamp>true</notimestamp>
+					<windowtitle>HowTo ExCom</windowtitle>
+					<bottom><![CDATA[<a href="https://github.com/fedups/com.obdobion.excom/wiki">Open-Source on GitHub<a>.]]></bottom>
 				</configuration>
 				<executions>
 					<execution>
@@ -98,18 +109,17 @@
 						<phase>verify</phase>
 						<goals>
 							<goal>jar</goal>
+							<goal>javadoc</goal>
 						</goals>
 					</execution>
 					<execution>
 						<id>javadoc-fix-main</id>
-						<phase>verify</phase>
 						<goals>
 							<goal>fix</goal>
 						</goals>
 					</execution>
 					<execution>
 						<id>javadoc-fix-test</id>
-						<phase>verify</phase>
 						<goals>
 							<goal>test-fix</goal>
 						</goals>
@@ -192,32 +202,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>${junit.version}</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>${slf4j.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>com.obdobion</groupId>
-			<artifactId>argument</artifactId>
-			<version>${argument.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		
