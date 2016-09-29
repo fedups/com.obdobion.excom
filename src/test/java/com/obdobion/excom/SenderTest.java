@@ -158,14 +158,12 @@ public class SenderTest
         final Config config = new Config(".");
         final Context context = PluginManager.createContext(config, new PluginManager(config));
         final Sender sender = new Sender();
-        context.setParser(CmdLine.load(sender,
-                "-h localhost -p 2526 -n targetPortNotUp"));
+        context.setParser(CmdLine.load(sender, "-h localhost -p 2526 -n targetPortNotUp"));
         sender.processInputRequest(context, "targetPortNotUp");
         App.destroyContext(context);
 
         Assert.assertEquals("targetPortNotUp result",
-                "Connection refused: connect",
-                context.getOutline().getWriter().toString());
+                "Connection refused", context.getOutline().getWriter().toString().substring(0, 18));
     }
 
     /**
