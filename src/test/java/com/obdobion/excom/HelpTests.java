@@ -91,8 +91,8 @@ public class HelpTests
             final int bytesReceived = sender.processInputRequest(context, "help testWithParms");
             App.destroyContext(context);
 
-            Assert.assertEquals(13, bytesReceived);
-            Assert.assertEquals("testWithParms\n", context.getOutline().getWriter().toString());
+            Assert.assertEquals(14, bytesReceived);
+            Assert.assertEquals("testWithParms.", context.getOutline().getWriter().toString());
         } finally
         {
             rcvr.stop();
@@ -122,7 +122,7 @@ public class HelpTests
             final int bytesReceived = sender.processInputRequest(context, "testWithParms --help");
             App.destroyContext(context);
 
-            Assert.assertEquals(40, bytesReceived);
+            Assert.assertTrue("windows and linux linefeed allowance", bytesReceived == 35 || bytesReceived == 36);
         } finally
         {
             rcvr.stop();
