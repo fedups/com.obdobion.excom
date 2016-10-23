@@ -25,11 +25,11 @@
 			<organizationUrl>http://www.github.com/fedups</organizationUrl>
 		</developer>
 	</developers>
-	<scm>
-		<connection>scm:git:git@github.com:fedups/com.obdobion.excom.git</connection>
-		<developerConnection>scm:git:git@github.com:fedups/com.obdobion.excom.git</developerConnection>
-		<url>git@github.com:fedups/com.obdobion.excom.git</url>
-	</scm>
+
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/fedups/com.obdobion.excom/issues</url>
+    </issueManagement>
 
 	<properties>
 		<java.target.version>1.8</java.target.version>
