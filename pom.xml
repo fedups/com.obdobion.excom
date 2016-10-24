@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.obdobion</groupId>
 	<artifactId>excom</artifactId>
-	<version>3.1.1</version>
+	<version>3.1.2</version>
 	<description>A command line tool to communicate with a running Java application.</description>
 	<name>${project.groupId}.${project.artifactId}</name>
 	<url>https://github.com/fedups/com.obdobion.excom</url>
@@ -25,18 +25,24 @@
 			<organizationUrl>http://www.github.com/fedups</organizationUrl>
 		</developer>
 	</developers>
+	
 	<scm>
 		<connection>scm:git:git@github.com:fedups/com.obdobion.excom.git</connection>
 		<developerConnection>scm:git:git@github.com:fedups/com.obdobion.excom.git</developerConnection>
 		<url>git@github.com:fedups/com.obdobion.excom.git</url>
 	</scm>
 
+    <issueManagement>
+        <system>GitHub</system>
+        <url>https://github.com/fedups/com.obdobion.excom/issues</url>
+    </issueManagement>
+
 	<properties>
 		<java.target.version>1.8</java.target.version>
 		<java.source.version>1.8</java.source.version>
 		<junit.version>4.8.1</junit.version>
 		
-		<howto.version>1.2.0</howto.version>
+		<howto.version>1.2.1</howto.version>
 		
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
 	</properties>
