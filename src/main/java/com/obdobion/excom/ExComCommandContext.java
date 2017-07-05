@@ -7,7 +7,7 @@ package com.obdobion.excom;
  *
  * @author Chris DeGreef fedupforone@gmail.com
  */
-public class ExComContext
+public class ExComCommandContext
 {
     protected ClientCommand clientCommand;
     String[]                commandArgs;
@@ -22,10 +22,15 @@ public class ExComContext
      * Constructor for ExComContext.
      * </p>
      */
-    public ExComContext()
+    public ExComCommandContext()
     {
         block = true;
         timeoutMS = -1;
+    }
+
+    public String getResult()
+    {
+        return result;
     }
 
     /**
@@ -37,7 +42,7 @@ public class ExComContext
      * @param commandArgs a {@link java.lang.String} object.
      * @param wait a boolean.
      */
-    public ExComContext(final boolean wait, final String commandName, final String... commandArgs)
+    public ExComCommandContext(final boolean wait, final String commandName, final String... commandArgs)
     {
         this.commandName = commandName;
         this.commandArgs = commandArgs;
@@ -52,7 +57,7 @@ public class ExComContext
      *
      * @param commandName a {@link java.lang.String} object.
      */
-    public ExComContext(final String commandName)
+    public ExComCommandContext(final String commandName)
     {
         this.commandName = commandName;
         block = true;
@@ -67,7 +72,7 @@ public class ExComContext
      * @param commandName a {@link java.lang.String} object.
      * @param commandArgs a {@link java.lang.String} object.
      */
-    public ExComContext(final String commandName, final String... commandArgs)
+    public ExComCommandContext(final String commandName, final String... commandArgs)
     {
         this.commandName = commandName;
         this.commandArgs = commandArgs;

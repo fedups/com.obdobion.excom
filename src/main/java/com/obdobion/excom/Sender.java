@@ -11,11 +11,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.obdobion.argument.annotation.Arg;
-import com.obdobion.howto.Context;
-import com.obdobion.howto.IPluginCommand;
-import com.obdobion.howto.module.Empty;
-import com.obdobion.howto.module.InteractiveConsole;
-import com.obdobion.howto.module.Quit;
+import com.obdobion.excom.ui.ExcomContext;
+import com.obdobion.excom.ui.IPluginCommand;
+import com.obdobion.excom.ui.module.Empty;
+import com.obdobion.excom.ui.module.InteractiveConsole;
+import com.obdobion.excom.ui.module.Quit;
 
 /**
  * <p>
@@ -55,7 +55,7 @@ public class Sender implements IPluginCommand
     @Arg
     private boolean             asynchronous;
 
-    ExComContext                excomContext;
+    ExComCommandContext                excomContext;
 
     private Thread              consoleInputThread;
 
@@ -150,9 +150,9 @@ public class Sender implements IPluginCommand
      * </p>
      */
     @Override
-    public int execute(final Context p_context)
+    public int execute(final ExcomContext p_context)
     {
-        final Context context = p_context;
+        final ExcomContext context = p_context;
         logger.debug("interactive remote control console opened");
 
         setConsoleInputThread(new Thread()
@@ -336,12 +336,12 @@ public class Sender implements IPluginCommand
         return stop;
     }
 
-    int processInputRequest(final Context context, final String inputRequest)
+    int processInputRequest(final ExcomContext context, final String inputRequest)
     {
         int bytesReceived = 0;
         try
         {
-            excomContext = new ExComContext();
+            excomContext = new ExComCommandContext();
             excomContext.logResult = logResult;
             excomContext.timeoutMS = timeoutMS;
             excomContext.block = !asynchronous;

@@ -4,10 +4,9 @@ import org.junit.Test;
 
 import com.obdobion.argument.CmdLine;
 import com.obdobion.argument.annotation.Arg;
-import com.obdobion.howto.App;
-import com.obdobion.howto.Config;
-import com.obdobion.howto.Context;
-import com.obdobion.howto.PluginManager;
+import com.obdobion.excom.ui.Config;
+import com.obdobion.excom.ui.ExcomContext;
+import com.obdobion.excom.ui.PluginManager;
 
 import junit.framework.Assert;
 
@@ -50,11 +49,11 @@ public class HelpTests
             rcvr.go();
 
             final Config config = new Config(".");
-            final Context context = PluginManager.createContext(config, new PluginManager(config));
+            final ExcomContext context = PluginManager.createContext(config, new PluginManager(config));
             final Sender sender = new Sender();
             context.setParser(CmdLine.load(sender, "-h localhost -p 2526 -n testHelpTOC"));
             final int bytesReceived = sender.processInputRequest(context, "help");
-            App.destroyContext(context);
+            WatchForCommandLineCommands.stop(context);
 
             Assert.assertEquals(80, bytesReceived);
             Assert.assertEquals("Commands\n" +
@@ -85,11 +84,11 @@ public class HelpTests
             rcvr.go();
 
             final Config config = new Config(".");
-            final Context context = PluginManager.createContext(config, new PluginManager(config));
+            final ExcomContext context = PluginManager.createContext(config, new PluginManager(config));
             final Sender sender = new Sender();
             context.setParser(CmdLine.load(sender, "-h localhost -p 2526 -n testWithParms"));
             final int bytesReceived = sender.processInputRequest(context, "help testWithParms");
-            App.destroyContext(context);
+            WatchForCommandLineCommands.stop(context);
 
             Assert.assertEquals(14, bytesReceived);
             Assert.assertEquals("testWithParms.", context.getOutline().getWriter().toString());
@@ -116,11 +115,11 @@ public class HelpTests
             rcvr.go();
 
             final Config config = new Config(".");
-            final Context context = PluginManager.createContext(config, new PluginManager(config));
+            final ExcomContext context = PluginManager.createContext(config, new PluginManager(config));
             final Sender sender = new Sender();
             context.setParser(CmdLine.load(sender, "-h localhost -p 2526 -n testWithParms"));
             final int bytesReceived = sender.processInputRequest(context, "testWithParms --help");
-            App.destroyContext(context);
+            WatchForCommandLineCommands.stop(context);
 
             Assert.assertTrue("windows and linux linefeed allowance", bytesReceived == 35 || bytesReceived == 36);
         } finally

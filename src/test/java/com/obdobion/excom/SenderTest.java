@@ -5,10 +5,9 @@ import org.junit.Test;
 
 import com.obdobion.argument.CmdLine;
 import com.obdobion.argument.annotation.Arg;
-import com.obdobion.howto.App;
-import com.obdobion.howto.Config;
-import com.obdobion.howto.Context;
-import com.obdobion.howto.PluginManager;
+import com.obdobion.excom.ui.Config;
+import com.obdobion.excom.ui.ExcomContext;
+import com.obdobion.excom.ui.PluginManager;
 
 /**
  * <p>
@@ -47,25 +46,20 @@ public class SenderTest
         final Receiver rcvr = new Receiver(2526);
         try
         {
-            final ClientCommand cc = rcvr.createCommand("abortingAHungThreadCCTimer", new IExternalRequest()
-            {
-                @Override
-                public String execute(final ClientCommand p_cc) throws Exception
-                {
-                    for (int x = 0; x < 60; x++)
-                        synchronized (rcvr)
+            final ClientCommand cc = rcvr.createCommand("abortingAHungThreadCCTimer", p_cc -> {
+                for (int x = 0; x < 60; x++)
+                    synchronized (rcvr)
+                    {
+                        try
                         {
-                            try
-                            {
-                                Thread.sleep(10);
-                            } catch (final Exception e)
-                            {
-                                System.out.println("ignoring " + e.getMessage());
-                            }
+                            Thread.sleep(10);
+                        } catch (final Exception e)
+                        {
+                            System.out.println("ignoring " + e.getMessage());
                         }
-                    Assert.fail("thread should have been aborted");
-                    return "thread should have been aborted";
-                }
+                    }
+                Assert.fail("thread should have been aborted");
+                return "thread should have been aborted";
             });
             cc.setTimeoutMS(500);
             rcvr.register(cc);
@@ -73,11 +67,11 @@ public class SenderTest
             rcvr.go();
 
             final Config config = new Config(".");
-            final Context context = PluginManager.createContext(config, new PluginManager(config));
+            final ExcomContext context = PluginManager.createContext(config, new PluginManager(config));
             final Sender sender = new Sender();
             context.setParser(CmdLine.load(sender, "-h localhost -p 2526 -n abortingAHungThreadCCTimer"));
             sender.processInputRequest(context, "abortingAHungThreadCCTimer");
-            App.destroyContext(context);
+            WatchForCommandLineCommands.stop(context);
 
             Assert.assertEquals("abortingAHungThreadCCTimer result",
                     "timed-out",
@@ -102,25 +96,20 @@ public class SenderTest
         final Receiver rcvr = new Receiver(2526);
         try
         {
-            final ClientCommand cc = rcvr.createCommand("abortingAHungThreadContextTimer", new IExternalRequest()
-            {
-                @Override
-                public String execute(final ClientCommand _cc) throws Exception
-                {
-                    for (int x = 0; x < 60; x++)
-                        synchronized (rcvr)
+            final ClientCommand cc = rcvr.createCommand("abortingAHungThreadContextTimer", _cc -> {
+                for (int x = 0; x < 60; x++)
+                    synchronized (rcvr)
+                    {
+                        try
                         {
-                            try
-                            {
-                                Thread.sleep(10);
-                            } catch (final Exception e)
-                            {
-                                System.out.println("ignoring " + e.getMessage());
-                            }
+                            Thread.sleep(10);
+                        } catch (final Exception e)
+                        {
+                            System.out.println("ignoring " + e.getMessage());
                         }
-                    Assert.fail("thread should have been aborted");
-                    return "thread should have been aborted";
-                }
+                    }
+                Assert.fail("thread should have been aborted");
+                return "thread should have been aborted";
             });
             cc.setTimeoutMS(-1);
             rcvr.register(cc);
@@ -128,12 +117,12 @@ public class SenderTest
             rcvr.go();
 
             final Config config = new Config(".");
-            final Context context = PluginManager.createContext(config, new PluginManager(config));
+            final ExcomContext context = PluginManager.createContext(config, new PluginManager(config));
             final Sender sender = new Sender();
             context.setParser(CmdLine.load(sender,
                     "-h localhost -p 2526 -n abortingAHungThreadContextTimer --timeoutMS 500 --logResult"));
             sender.processInputRequest(context, "abortingAHungThreadContextTimer");
-            App.destroyContext(context);
+            WatchForCommandLineCommands.stop(context);
 
             Assert.assertEquals("abortingAHungThreadCCTimer result",
                     "timed-out",
@@ -156,11 +145,11 @@ public class SenderTest
     public void targetPortNotUp() throws Exception
     {
         final Config config = new Config(".");
-        final Context context = PluginManager.createContext(config, new PluginManager(config));
+        final ExcomContext context = PluginManager.createContext(config, new PluginManager(config));
         final Sender sender = new Sender();
         context.setParser(CmdLine.load(sender, "-h localhost -p 2526 -n targetPortNotUp"));
         sender.processInputRequest(context, "targetPortNotUp");
-        App.destroyContext(context);
+        WatchForCommandLineCommands.stop(context);
 
         Assert.assertEquals("targetPortNotUp result",
                 "Connection refused", context.getOutline().getWriter().toString().substring(0, 18));
@@ -180,27 +169,22 @@ public class SenderTest
         final Receiver rcvr = new Receiver(2526);
         try
         {
-            rcvr.register("waitForever", new IExternalRequest()
-            {
-                @Override
-                public String execute(final ClientCommand cc) throws Exception
+            rcvr.register("waitForever", cc -> {
+                synchronized (rcvr)
                 {
-                    synchronized (rcvr)
-                    {
-                        rcvr.wait(1000);
-                    }
-                    interruptMsgShouldBeNull = "this should not be set";
-                    return "should not return";
+                    rcvr.wait(1000);
                 }
+                interruptMsgShouldBeNull = "this should not be set";
+                return "should not return";
             });
             rcvr.go();
 
             final Config config = new Config(".");
-            final Context context = PluginManager.createContext(config, new PluginManager(config));
+            final ExcomContext context = PluginManager.createContext(config, new PluginManager(config));
             final Sender sender = new Sender();
             context.setParser(CmdLine.load(sender, "-h localhost -p 2526 -n waitForever --async"));
             sender.processInputRequest(context, "waitForever");
-            App.destroyContext(context);
+            WatchForCommandLineCommands.stop(context);
 
         } finally
         {

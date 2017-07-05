@@ -59,9 +59,9 @@ public class ReceiverThread extends Thread
         }
     }
 
-    private ExComContext convertToContext(final byte[] b, final int length)
+    private ExComCommandContext convertToContext(final byte[] b, final int length)
     {
-        final ExComContext context = new ExComContext();
+        final ExComCommandContext context = new ExComCommandContext();
 
         final ByteBuffer request = ByteBuffer.wrap(b, 0, length);
 
@@ -93,7 +93,7 @@ public class ReceiverThread extends Thread
         return context;
     }
 
-    private Thread createCommandThread(final ExComContext context)
+    private Thread createCommandThread(final ExComCommandContext context)
     {
         final Stack<?> parentNDC = NDC.cloneStack();
         final Thread commandThread = new Thread(context.commandName + "_ExComCommand")
@@ -124,12 +124,12 @@ public class ReceiverThread extends Thread
         return commandThread;
     }
 
-    private ExComContext createContext(final Socket client, final StringBuilder out) throws Exception
+    private ExComCommandContext createContext(final Socket client, final StringBuilder out) throws Exception
     {
         final byte[] b = new byte[4096];
         final int cnt = client.getInputStream().read(b);
 
-        final ExComContext context = convertToContext(b, cnt);
+        final ExComCommandContext context = convertToContext(b, cnt);
 
         if (cnt < 0)
         {
@@ -182,7 +182,7 @@ public class ReceiverThread extends Thread
         }
     }
 
-    private Thread createTimeoutWatcherThread(final ExComContext watchingContext, final Thread watchingThread)
+    private Thread createTimeoutWatcherThread(final ExComCommandContext watchingContext, final Thread watchingThread)
     {
         return new Thread("ExComTimeoutWatcher")
         {
@@ -233,7 +233,7 @@ public class ReceiverThread extends Thread
     }
 
     @SuppressWarnings("deprecation")
-    private void forkAndTime(final Thread commandThread, final ExComContext context)
+    private void forkAndTime(final Thread commandThread, final ExComCommandContext context)
     {
         logger.trace("start");
         commandThread.start();
@@ -259,7 +259,7 @@ public class ReceiverThread extends Thread
 
     private void forkOffClientProcess(final Socket client)
     {
-        ExComContext context = null;
+        ExComCommandContext context = null;
 
         NDC.push(client.getRemoteSocketAddress().toString());
         try
@@ -295,7 +295,7 @@ public class ReceiverThread extends Thread
                     return;
                 }
 
-                final ExComContext contextForThread = context;
+                final ExComCommandContext contextForThread = context;
                 final Stack<?> parentNDC = NDC.cloneStack();
 
                 final Thread clientProcess = new Thread(
