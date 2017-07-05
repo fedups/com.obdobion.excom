@@ -1,6 +1,6 @@
 package com.obdobion.excom.ui.module;
 
-import com.obdobion.excom.ui.ExcomContext;
+import com.obdobion.excom.ui.ExComContext;
 import com.obdobion.excom.ui.IPluginCommand;
 
 /**
@@ -31,7 +31,7 @@ public class Quit implements IPluginCommand
 
     /** {@inheritDoc} */
     @Override
-    public int execute(final ExcomContext context)
+    public int execute(final ExComContext context)
     {
         context.setRecordingHistory(false);
         return 0;

@@ -15,8 +15,9 @@ import org.apache.log4j.NDC;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.obdobion.argument.CmdLine;
-import com.obdobion.argument.usage.UsageBuilder;
+import com.obdobion.excom.ui.ExComContext;
+import com.obdobion.excom.ui.IPluginCommand;
+import com.obdobion.excom.ui.PluginNotFoundException;
 
 /**
  * <p>
@@ -43,12 +44,13 @@ public class ReceiverThread extends Thread
      * @param receiver a {@link com.obdobion.excom.Receiver} object.
      * @param serverSocket a {@link java.net.ServerSocket} object.
      */
-    public ReceiverThread(final String name, final Receiver receiver, final ServerSocket serverSocket)
+    public ReceiverThread(final String name, final Receiver receiver,
+            final ServerSocket serverSocket)
     {
         super(name);
         this.receiver = receiver;
         this.serverSocket = serverSocket;
-        clientProcesses = new ArrayList<Thread>();
+        clientProcesses = new ArrayList<>();
     }
 
     private void addClientProcess(final Thread cp)
@@ -59,9 +61,9 @@ public class ReceiverThread extends Thread
         }
     }
 
-    private ExComCommandContext convertToContext(final byte[] b, final int length)
+    private TeleportedCommandContext convertToContext(final byte[] b, final int length)
     {
-        final ExComCommandContext context = new ExComCommandContext();
+        final TeleportedCommandContext context = new TeleportedCommandContext();
 
         final ByteBuffer request = ByteBuffer.wrap(b, 0, length);
 
@@ -93,7 +95,7 @@ public class ReceiverThread extends Thread
         return context;
     }
 
-    private Thread createCommandThread(final ExComCommandContext context)
+    private Thread createCommandThread(final TeleportedCommandContext context)
     {
         final Stack<?> parentNDC = NDC.cloneStack();
         final Thread commandThread = new Thread(context.commandName + "_ExComCommand")
@@ -103,33 +105,28 @@ public class ReceiverThread extends Thread
             {
                 NDC.inherit(parentNDC);
 
-                long start, end;
-                start = System.currentTimeMillis();
                 try
                 {
-                    context.clientCommand.duration = 0;
-                    context.result = context.clientCommand.command.execute(context.clientCommand);
-                    end = System.currentTimeMillis();
-                    context.clientCommand.duration = end - start;
-                } catch (final InterruptedException e)
-                {} catch (final Exception e)
+                    final ExComContext cc = getReceiver().getExCom().getPlugInManager()
+                            .run(context.commandName.toLowerCase(), context.commandArgs);
+                    context.result = cc.getOutline().getWriter().toString();
+                } catch (final Exception e)
                 {
                     logger.error(e.getMessage(), e);
                     context.result = e.getMessage();
-                    end = System.currentTimeMillis();
-                    context.clientCommand.duration = end - start;
                 }
             }
         };
         return commandThread;
     }
 
-    private ExComCommandContext createContext(final Socket client, final StringBuilder out) throws Exception
+    private TeleportedCommandContext createContext(final Socket client, final StringBuilder out)
+            throws Exception
     {
         final byte[] b = new byte[4096];
         final int cnt = client.getInputStream().read(b);
 
-        final ExComCommandContext context = convertToContext(b, cnt);
+        final TeleportedCommandContext context = convertToContext(b, cnt);
 
         if (cnt < 0)
         {
@@ -154,26 +151,15 @@ public class ReceiverThread extends Thread
             if (context.commandArgs != null && context.commandArgs.length > 0)
                 logger.info("args:{}", context.commandArgs[0]);
 
-            final ClientCommand cc = getReceiver().clientCommands.get(context.commandName.toLowerCase());
-            context.clientCommand = cc;
+            // final ExComContext cc =
+            // getReceiver().getExCom().getPlugInManager()
+            // .run(context.commandName.toLowerCase(), context.commandArgs);
 
-            if (cc == null)
-                throw new Exception("unknown command named: " + context.commandName);
-
-            if (context.commandArgs != null)
-                cc.args.parse(cc.command, context.commandArgs);
-            else
-                /*
-                 * So that defaults get applied and the variables are cleared on
-                 * the command.
-                 */
-                cc.args.parse(cc.command);
-
-            if (((CmdLine) cc.args).isUsageRun())
-            {
-                showHelpTopic(context.clientCommand.getCmdName(), out);
-                return null;
-            }
+            // if (cc == null)
+            // {
+            // showHelpTopic(context.clientCommand.getCmdName(), out);
+            // return null;
+            // }
 
             return context;
         } finally
@@ -182,7 +168,8 @@ public class ReceiverThread extends Thread
         }
     }
 
-    private Thread createTimeoutWatcherThread(final ExComCommandContext watchingContext, final Thread watchingThread)
+    private Thread createTimeoutWatcherThread(final TeleportedCommandContext watchingContext,
+            final Thread watchingThread)
     {
         return new Thread("ExComTimeoutWatcher")
         {
@@ -193,10 +180,8 @@ public class ReceiverThread extends Thread
                 try
                 {
                     long timeout = -1;
-                    if (timeout == -1 && watchingContext.timeoutMS != -1)
-                        timeout = watchingContext.timeoutMS;
-                    if (timeout == -1 && watchingContext.clientCommand.getTimeoutMS() != -1)
-                        timeout = watchingContext.clientCommand.getTimeoutMS();
+                    if (timeout == -1 && watchingContext.getTimeoutMS() != -1)
+                        timeout = watchingContext.getTimeoutMS();
                     if (timeout == -1)
                         timeout = 0;
                     watchingThread.join(timeout);
@@ -205,7 +190,6 @@ public class ReceiverThread extends Thread
                         logger.warn("command timed out");
                         watchingThread.interrupt();
                         watchingThread.stop();
-                        watchingContext.clientCommand.duration = timeout;
                         watchingContext.result = "timed-out";
                     }
                 } catch (final InterruptedException e)
@@ -233,7 +217,7 @@ public class ReceiverThread extends Thread
     }
 
     @SuppressWarnings("deprecation")
-    private void forkAndTime(final Thread commandThread, final ExComCommandContext context)
+    private void forkAndTime(final Thread commandThread, final TeleportedCommandContext context)
     {
         logger.trace("start");
         commandThread.start();
@@ -241,15 +225,15 @@ public class ReceiverThread extends Thread
         timeoutWatcher.start();
         if (context.block)
             try
-            {
+        {
                 timeoutWatcher.join();
-            } catch (final InterruptedException e)
-            {
-                logger.warn("command interrupted");
-                commandThread.stop();
-                context.result = "interrupted";
-            } finally
-            {}
+        } catch (final InterruptedException e)
+        {
+            logger.warn("command interrupted");
+            commandThread.stop();
+            context.result = "interrupted";
+        } finally
+        {}
         else
         {
             context.result = "asynchronous";
@@ -259,7 +243,7 @@ public class ReceiverThread extends Thread
 
     private void forkOffClientProcess(final Socket client)
     {
-        ExComCommandContext context = null;
+        TeleportedCommandContext context = null;
 
         NDC.push(client.getRemoteSocketAddress().toString());
         try
@@ -295,11 +279,12 @@ public class ReceiverThread extends Thread
                     return;
                 }
 
-                final ExComCommandContext contextForThread = context;
+                final TeleportedCommandContext contextForThread = context;
                 final Stack<?> parentNDC = NDC.cloneStack();
 
                 final Thread clientProcess = new Thread(
-                        (context == null ? "help" : context.commandName) + "_ExComCommandTimeOutController")
+                        (context == null ? "help" : context.commandName)
+                        + "_ExComCommandTimeOutController")
                 {
                     @Override
                     @SuppressWarnings("deprecation")
@@ -376,7 +361,8 @@ public class ReceiverThread extends Thread
 
     private String myNdcId()
     {
-        return "excom@" + serverSocket.getInetAddress().getHostName() + ":" + serverSocket.getLocalPort();
+        return "excom@" + serverSocket.getInetAddress().getHostName() + ":"
+                + serverSocket.getLocalPort();
     }
 
     private void nl(final StringBuilder out)
@@ -413,18 +399,18 @@ public class ReceiverThread extends Thread
             running = true;
             while (getReceiver().isRunning())
                 try
-                {
+            {
                     forkOffClientProcess(serverSocket.accept());
-                } catch (final SocketTimeoutException e)
-                {
-                    logger.error("run()", e);
-                    continue;
-                } catch (final IOException e)
-                {
-                    if (!"socket closed".equals(e.getMessage()))
-                        logger.warn(e.getMessage());
-                    continue;
-                }
+            } catch (final SocketTimeoutException e)
+            {
+                logger.error("run()", e);
+                continue;
+            } catch (final IOException e)
+            {
+                if (!"socket closed".equals(e.getMessage()))
+                    logger.warn(e.getMessage());
+                continue;
+            }
         } finally
         {
             synchronized (clientProcesses)
@@ -458,11 +444,11 @@ public class ReceiverThread extends Thread
          * display.
          */
         int maxWidth = 0;
-        final Set<String> sortedNames = new TreeSet<String>();
-        for (final ClientCommand cc : getReceiver().clientCommands.values())
+        final Set<String> sortedNames = new TreeSet<>();
+        for (final String commandName : getReceiver().getExCom().getPlugInManager().allNames())
         {
-            final int cnw = cc.cmdName.length();
-            sortedNames.add(cc.cmdName);
+            final int cnw = commandName.length();
+            sortedNames.add(commandName);
             if (cnw > maxWidth)
                 maxWidth = cnw;
         }
@@ -474,14 +460,20 @@ public class ReceiverThread extends Thread
 
         for (final String sn : sortedNames)
         {
-            final ClientCommand cc = getReceiver().clientCommands.get(sn.toLowerCase());
-            out.append(fixedWidth(cc.cmdName, maxWidth));
-            if (cc.title != null)
+            try
             {
-                out.append(" - ");
-                out.append(cc.title);
+                final IPluginCommand     cc = getReceiver().getExCom().getPlugInManager()
+                        .get(sn.toLowerCase());
+                out.append(fixedWidth(cc.getName(), maxWidth));
+                if (cc.getOverview() != null)
+                {
+                    out.append(" - ");
+                    out.append(cc.getOverview());
+                }
+                nl(out);
+            } catch (final PluginNotFoundException e)
+            {
             }
-            nl(out);
         }
         // hr(out);
     }
@@ -489,16 +481,16 @@ public class ReceiverThread extends Thread
     private void showHelpTopic(final String key, final StringBuilder out)
     {
 
+        nl(out);
+        out.append("Help for \"").append(key).append("\"");
+        nl(out);
         // hr(out);
-        // out.append("Help for \"").append(key).append("\"");
-        // nl(out);
-        // hr(out);
-
-        final ClientCommand cc = getReceiver().clientCommands.get(key.toLowerCase());
-        if (cc == null)
-            out.append("unknown command");
-        else
-            out.append(UsageBuilder.getWriter(cc.args, 3).toString());
+        // IPluginCommand cc = getReceiver().getExCom().getPlugInManager()
+        // .get(key.toLowerCase());
+        // if (cc == null)
+        // out.append("unknown command");
+        // else
+        // out.append(UsageBuilder.getWriter(cc., 3).toString());
         // nl(out);
         // hr(out);
     }

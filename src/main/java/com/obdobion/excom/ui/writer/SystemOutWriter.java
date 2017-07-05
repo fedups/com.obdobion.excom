@@ -2,10 +2,7 @@ package com.obdobion.excom.ui.writer;
 
 import java.io.PrintWriter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.obdobion.excom.ui.Config;
+import com.obdobion.excom.ui.ExComConfig;
 
 /**
  * ConsoleWriter.
@@ -20,16 +17,12 @@ import com.obdobion.excom.ui.Config;
  */
 public class SystemOutWriter extends ConsoleWriter
 {
-    private final static Logger logger = LoggerFactory.getLogger(SystemOutWriter.class.getName());
-
-    @SuppressWarnings("hiding")
     PrintWriter                 console;
 
-    public SystemOutWriter(final Config config)
+    public SystemOutWriter(final ExComConfig config)
     {
         super(config);
         console = new PrintWriter(System.out);
-        logger.debug("overriding output to System.out");
     }
 
     @Override

@@ -7,8 +7,10 @@ import com.obdobion.argument.ICmdLine;
  * ClientCommand class.
  * </p>
  *
+ * @deprecated
  * @author Chris DeGreef fedupforone@gmail.com
  */
+@Deprecated
 public class ClientCommand
 {
 
@@ -29,7 +31,8 @@ public class ClientCommand
      * @param args a {@link com.obdobion.argument.ICmdLine} object.
      * @param command a {@link com.obdobion.excom.IExternalRequest} object.
      */
-    public ClientCommand(final String title, final String cmdName, final ICmdLine args, final IExternalRequest command)
+    public ClientCommand(final String title, final String cmdName, final ICmdLine args,
+            final IExternalRequest command)
     {
         this.title = title;
         this.cmdName = cmdName;

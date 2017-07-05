@@ -3,10 +3,8 @@ package com.obdobion.excom.ui.module;
 import java.io.Console;
 
 import org.apache.log4j.NDC;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.obdobion.excom.ui.ExcomContext;
+import com.obdobion.excom.ui.ExComContext;
 import com.obdobion.excom.ui.HistoryManager;
 import com.obdobion.excom.ui.IPluginCommand;
 
@@ -19,14 +17,12 @@ import com.obdobion.excom.ui.IPluginCommand;
  */
 public class InteractiveConsole implements IPluginCommand
 {
-    private final static Logger logger = LoggerFactory.getLogger(InteractiveConsole.class.getName());
-
     /** Constant <code>GROUP="IC"</code> */
     public static final String  GROUP  = "IC";
     /** Constant <code>NAME="interactiveConsole"</code> */
     public static final String  NAME   = "interactiveConsole";
 
-    private ExcomContext             context;
+    private ExComContext             context;
     private Thread              consoleInputThread;
     private boolean             stop;
 
@@ -40,12 +36,10 @@ public class InteractiveConsole implements IPluginCommand
 
     /** {@inheritDoc} */
     @Override
-    public int execute(final ExcomContext p_context)
+    public int execute(final ExComContext p_context)
     {
         context = p_context;
         context.setRecordingHistory(false);
-        logger.debug("interactive console opened");
-
         setConsoleInputThread(new Thread()
         {
             @Override
@@ -56,7 +50,6 @@ public class InteractiveConsole implements IPluginCommand
                 final Console c = System.console();
                 if (c == null)
                 {
-                    logger.error("the system console is not available");
                     System.err.println("No console.");
                     System.exit(1);
                     return;
@@ -90,9 +83,7 @@ public class InteractiveConsole implements IPluginCommand
             getConsoleInputThread().join();
         } catch (final InterruptedException e)
         {
-            logger.debug("waiting for interactive console input", e);
         }
-        logger.trace("interactive console closed");
         return 0;
     }
 
@@ -174,7 +165,7 @@ public class InteractiveConsole implements IPluginCommand
 
         try
         {
-            final ExcomContext subcommandContext = context.getPluginManager().run(context,
+            final ExComContext subcommandContext = context.getPluginManager().run(context,
                     context.getPluginManager().uniqueNameFor(commandName),
                     arguments);
             HistoryManager.getInstance().record(subcommandContext);
@@ -182,7 +173,6 @@ public class InteractiveConsole implements IPluginCommand
 
         } catch (final Exception e)
         {
-            logger.error("{} unsuccessfull", commandName, e);
             context.getOutline().printf("\n\n%1$s\n\n", e.getMessage());
         }
         context.getOutline().reset();

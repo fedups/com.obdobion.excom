@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import org.apache.log4j.NDC;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.obdobion.argument.CmdLine;
 import com.obdobion.argument.type.AbstractCLA;
@@ -24,20 +22,18 @@ import com.obdobion.argument.type.AbstractCLA;
  */
 public class PluginManager
 {
-    private final static Logger logger = LoggerFactory.getLogger(PluginManager.class.getName());
-
     /**
      * <p>
      * createContext.
      * </p>
      *
-     * @param config a {@link com.obdobion.excom.ui.Config} object.
+     * @param config a {@link com.obdobion.excom.ui.ExComConfig} object.
      * @param pluginManager a {@link com.obdobion.excom.ui.PluginManager} object.
-     * @return a {@link com.obdobion.excom.ui.ExcomContext} object.
+     * @return a {@link com.obdobion.excom.ui.ExComContext} object.
      */
-    static public ExcomContext createContext(final Config config, final PluginManager pluginManager)
+    static public ExComContext createContext(final ExComConfig config, final PluginManager pluginManager)
     {
-        final ExcomContext context = new ExcomContext();
+        final ExComContext context = new ExComContext();
         context.setRecordingHistory(true);
         context.setOutline(new Outline(config));
         context.setPluginManager(pluginManager);
@@ -50,13 +46,13 @@ public class PluginManager
      * createContext.
      * </p>
      *
-     * @param currentContextToCloneFrom a {@link com.obdobion.excom.ui.ExcomContext}
+     * @param currentContextToCloneFrom a {@link com.obdobion.excom.ui.ExComContext}
      *            object.
-     * @return a {@link com.obdobion.excom.ui.ExcomContext} object.
+     * @return a {@link com.obdobion.excom.ui.ExComContext} object.
      */
-    static public ExcomContext createContext(final ExcomContext currentContextToCloneFrom)
+    static public ExComContext createContext(final ExComContext currentContextToCloneFrom)
     {
-        final ExcomContext context = new ExcomContext();
+        final ExComContext context = new ExComContext();
         context.setRecordingHistory(true);
         context.setSubcontext(true);
         context.setOutline(currentContextToCloneFrom.getOutline().getCurrent());
@@ -65,7 +61,7 @@ public class PluginManager
         return context;
     }
 
-    final Config         config;
+    final ExComConfig         config;
     List<IPluginCommand> allPlugins;
     private String       echoType;
 
@@ -74,9 +70,9 @@ public class PluginManager
      * Constructor for PluginManager.
      * </p>
      *
-     * @param config a {@link com.obdobion.excom.ui.Config} object.
+     * @param config a {@link com.obdobion.excom.ui.ExComConfig} object.
      */
-    public PluginManager(final Config config)
+    public PluginManager(final ExComConfig config)
     {
         this.config = config;
     }
@@ -95,7 +91,7 @@ public class PluginManager
         return names;
     }
 
-    private void echoCommand(final ExcomContext context)
+    private void echoCommand(final ExComContext context)
     {
         final StringBuilder sb = new StringBuilder();
         if (echoType.equals("commandline"))
@@ -150,7 +146,7 @@ public class PluginManager
                     String normalizedPluginGroup = plugin.getGroup().toLowerCase();
                     final String normalizedGroup = finalGroup == null
                             ? normalizedPluginGroup
-                            : finalGroup.toLowerCase();
+                                    : finalGroup.toLowerCase();
                     if (normalizedPluginGroup.length() > normalizedGroup.length())
                         normalizedPluginGroup = normalizedPluginGroup.substring(0, normalizedGroup.length());
 
@@ -175,7 +171,7 @@ public class PluginManager
                             .toLowerCase();
                     final String normalizedGroup = finalGroup == null
                             ? normalizedPluginGroup
-                            : AbstractCLA.createCamelCapVersionOfKeyword(finalGroup).toLowerCase();
+                                    : AbstractCLA.createCamelCapVersionOfKeyword(finalGroup).toLowerCase();
                     if (normalizedPluginGroup.length() > normalizedGroup.length())
                         normalizedPluginGroup = normalizedPluginGroup.substring(0, normalizedGroup.length());
 
@@ -200,7 +196,7 @@ public class PluginManager
                     String normalizedPluginGroup = plugin.getGroup().toLowerCase();
                     final String normalizedGroup = finalGroup == null
                             ? normalizedPluginGroup
-                            : finalGroup.toLowerCase();
+                                    : finalGroup.toLowerCase();
                     if (normalizedPluginGroup.length() > normalizedGroup.length())
                         normalizedPluginGroup = normalizedPluginGroup.substring(0, normalizedGroup.length());
 
@@ -226,7 +222,7 @@ public class PluginManager
                             .toLowerCase();
                     final String normalizedGroup = finalGroup == null
                             ? normalizedPluginGroup
-                            : AbstractCLA.createCamelCapVersionOfKeyword(finalGroup).toLowerCase();
+                                    : AbstractCLA.createCamelCapVersionOfKeyword(finalGroup).toLowerCase();
                     if (normalizedPluginGroup.length() > normalizedGroup.length())
                         normalizedPluginGroup = normalizedPluginGroup.substring(0, normalizedGroup.length());
 
@@ -245,7 +241,7 @@ public class PluginManager
 
         throw new PluginNotFoundException(
                 "A unique command was not found for \"" + name
-                        + "\".  Use 'menu' to see valid commands.");
+                + "\".  Use 'menu' to see valid commands.");
     }
 
     /**
@@ -272,11 +268,10 @@ public class PluginManager
                 plugin -> {
                     if (plugin.getName() != null)
                         allPlugins.add(plugin);
-                    logger.debug("loaded {} {} as \"{}\"", category, plugin.getClass().getName(), plugin.getName());
                 });
     }
 
-    private ExcomContext privateRun(final ExcomContext context, final String commandName, final String... args)
+    private ExComContext privateRun(final ExComContext context, final String commandName, final String... args)
             throws PluginNotFoundException, IOException, ParseException
     {
         final IPluginCommand command = get(commandName);
@@ -285,15 +280,15 @@ public class PluginManager
 
         try
         {
-            context.setOriginalUserInput(ExcomContext.convertToString(args));
+            context.setOriginalUserInput(ExComContext.convertToString(args));
             context.setParser(new CmdLine(command.getName(), command.getOverview()));
-            CmdLine.load(context.getParser(), command, args);
+            if (args != null)
+                CmdLine.load(context.getParser(), command, args);
             if (((CmdLine) context.getParser()).isUsageRun())
-                return null;
+                return context;
 
             final StringBuilder loggableArgs = new StringBuilder();
             context.getParser().exportCommandLine(loggableArgs);
-            logger.info("{}", loggableArgs);
 
             if (command.isOnceAndDone())
                 remove(command);
@@ -316,8 +311,6 @@ public class PluginManager
         if (allPlugins == null)
             return true;
         final boolean rc = allPlugins.remove(command);
-        if (rc)
-            logger.debug("removed \"{}.{}\" from menu", command.getGroup(), command.getName());
         return rc;
     }
 
@@ -329,19 +322,19 @@ public class PluginManager
      * it is not a loaded plugin then a simple "SEE" reference will be written
      * instead.
      *
-     * @param parentContext a {@link com.obdobion.excom.ui.ExcomContext} object.
+     * @param parentContext a {@link com.obdobion.excom.ui.ExComContext} object.
      * @param commandName a {@link java.lang.String} object.
      * @param format a {@link java.lang.String} object.
      * @param args a {@link java.lang.Object} object.
-     * @return a {@link com.obdobion.excom.ui.ExcomContext} object.
+     * @return a {@link com.obdobion.excom.ui.ExComContext} object.
      * @throws java.text.ParseException if any.
      * @throws java.io.IOException if any.
      * @throws com.obdobion.excom.ui.PluginNotFoundException if any.
      */
-    public ExcomContext run(final ExcomContext parentContext, final String commandName, final String format, final Object... args)
+    public ExComContext run(final ExComContext parentContext, final String commandName, final String format, final Object... args)
             throws PluginNotFoundException, IOException, ParseException
     {
-        final ExcomContext context = createContext(parentContext);
+        final ExComContext context = createContext(parentContext);
         String cmdlineArgs = null;
 
         final StringWriter sw = new StringWriter();
@@ -360,12 +353,12 @@ public class PluginManager
      *
      * @param commandName a {@link java.lang.String} object.
      * @param args a {@link java.lang.String} object.
-     * @return a {@link com.obdobion.excom.ui.ExcomContext} object.
+     * @return a {@link com.obdobion.excom.ui.ExComContext} object.
      * @throws com.obdobion.excom.ui.PluginNotFoundException if any.
      * @throws java.io.IOException if any.
      * @throws java.text.ParseException if any.
      */
-    public ExcomContext run(final String commandName, final String... args)
+    public ExComContext run(final String commandName, final String... args)
             throws PluginNotFoundException, IOException, ParseException
     {
         return privateRun(createContext(config, this), commandName, args);

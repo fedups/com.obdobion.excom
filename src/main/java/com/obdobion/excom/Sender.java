@@ -5,14 +5,14 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.ByteBuffer;
+import java.text.ParseException;
 
 import org.apache.log4j.NDC;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import com.obdobion.argument.annotation.Arg;
-import com.obdobion.excom.ui.ExcomContext;
+import com.obdobion.excom.ui.ExComConfig;
+import com.obdobion.excom.ui.ExComContext;
 import com.obdobion.excom.ui.IPluginCommand;
+import com.obdobion.excom.ui.PluginManager;
 import com.obdobion.excom.ui.module.Empty;
 import com.obdobion.excom.ui.module.InteractiveConsole;
 import com.obdobion.excom.ui.module.Quit;
@@ -26,64 +26,42 @@ import com.obdobion.excom.ui.module.Quit;
  */
 public class Sender implements IPluginCommand
 {
-    private final static Logger logger = LoggerFactory.getLogger(Sender.class.getName());
     /** Constant <code>GROUP="RemoteControl"</code> */
-    static public final String  GROUP  = InteractiveConsole.GROUP;
+    static public final String GROUP  = InteractiveConsole.GROUP;
     /** Constant <code>NAME="connectToServer"</code> */
-    static public final String  NAME   = "connectToServer";
+    static public final String NAME   = "connectToServer";
+    TeleportedCommandContext   commandContext;
 
-    @Arg(shortName = 'h', defaultValues = "localhost", help = "The DNS name or the IP address of the remote server.")
-    private String              host;
+    private Thread             consoleInputThread;
 
-    @Arg(shortName = 'p',
-            defaultValues = "2526",
-            range = { "1025", "65535" },
-            help = "The port on the remote host that is listening for these commands.")
-    private int                 port;
+    Socket                     socket = null;
 
-    @Arg(shortName = 'n',
-            caseSensitive = true,
-            help = "A name used by this command to decorate the prompt.  If unspecified, this will be the same as --host.")
-    private String              remoteName;
-
-    @Arg(help = "Only allow the command to run up to this limit of milliseconds", defaultValues = "-1")
-    private long                timeoutMS;
-
-    @Arg
-    private boolean             logResult;
-
-    @Arg
-    private boolean             asynchronous;
-
-    ExComCommandContext                excomContext;
-
-    private Thread              consoleInputThread;
-
-    Socket                      socket = null;
-
-    private boolean             stop;
+    private boolean            stop;
+    final private ExComConfig  config;
 
     /**
      * <p>
      * Constructor for Sender.
      * </p>
+     *
+     * @throws ParseException
+     * @throws IOException
      */
-    public Sender()
-    {}
+    public Sender() throws IOException, ParseException
+    {
+        config = new ExComConfig(".");
+    }
 
     private int communicateWithRemoteHost() throws IOException, SocketException
     {
-        logger.trace("connecting");
-        socket = new Socket(host, port);
-        logger.trace("connected");
-
+        socket = new Socket(config.getReceiverHost(), config.getSendReceivePort());
         socket.setSoTimeout(0);
         try
         {
 
             final ByteBuffer bb = ByteBuffer.allocate(4096);
 
-            bb.put(excomContext.commandName.trim().getBytes());
+            bb.put(commandContext.commandName.trim().getBytes());
             bb.put((byte) 0x00);
 
             /*
@@ -91,18 +69,14 @@ public class Sender implements IPluginCommand
              * what is being transmitted.
              */
 
-            bb.put((byte) (excomContext.logResult
-                    ? '1'
-                    : '0'));
-            bb.put((byte) (excomContext.block
-                    ? '1'
-                    : '0'));
-            bb.putLong(excomContext.timeoutMS);
+            bb.put((byte) (commandContext.logResult ? '1' : '0'));
+            bb.put((byte) (commandContext.block ? '1' : '0'));
+            bb.putLong(commandContext.timeoutMS);
 
-            if (excomContext.commandArgs != null)
+            if (commandContext.commandArgs != null)
             {
                 boolean firstTime = true;
-                for (final String argLine : excomContext.commandArgs)
+                for (final String argLine : commandContext.commandArgs)
                 {
                     if (!firstTime)
                         bb.putChar(' ');
@@ -111,15 +85,12 @@ public class Sender implements IPluginCommand
                 }
             }
 
-            logger.trace("sending {} bytes", bb.position());
             socket.getOutputStream().write(bb.array(), 0, bb.position());
 
             final byte[] b = new byte[4096];
             final StringBuilder output = new StringBuilder();
             int cnt = 0;
             int totalBytesReceived = 0;
-
-            logger.trace("waiting for response");
 
             while (cnt != -1)
             {
@@ -129,14 +100,10 @@ public class Sender implements IPluginCommand
                 totalBytesReceived += cnt;
                 output.append(new String(b, 0, cnt));
             }
-
-            logger.trace("{} bytes received", totalBytesReceived);
-
-            excomContext.result = output.toString();
+            commandContext.result = output.toString();
             return totalBytesReceived;
         } finally
         {
-            logger.trace("closing connection");
             socket.shutdownOutput();
             socket.close();
         }
@@ -150,11 +117,8 @@ public class Sender implements IPluginCommand
      * </p>
      */
     @Override
-    public int execute(final ExcomContext p_context)
+    public int execute(final ExComContext context)
     {
-        final ExcomContext context = p_context;
-        logger.debug("interactive remote control console opened");
-
         setConsoleInputThread(new Thread()
         {
             @Override
@@ -165,26 +129,28 @@ public class Sender implements IPluginCommand
                 final Console c = System.console();
                 if (c == null)
                 {
-                    logger.error("the system console is not available");
                     System.err.println("No console.");
                     System.exit(1);
                     return;
                 }
 
-                if (remoteName == null)
-                    remoteName = host;
-
-                NDC.push(remoteName);
+                NDC.push(config.getRemoteName());
                 try
                 {
                     while (true)
                     {
                         if (isStop())
                             return;
-                        final String aLine = c.readLine(remoteName + " > ");
+                        final String aLine = c.readLine(config.getRemoteName() + " > ");
                         if (aLine == null)
                             return;
-                        processInputRequest(context, aLine.trim());
+                        try
+                        {
+                            processInputRequest(context, aLine.trim());
+                        } catch (IOException | ParseException e)
+                        {
+                            e.printStackTrace();
+                        }
                     }
                 } finally
                 {
@@ -198,9 +164,7 @@ public class Sender implements IPluginCommand
             getConsoleInputThread().join();
         } catch (final InterruptedException e)
         {
-            logger.debug("waiting for interactive console input", e);
         }
-        logger.trace("interactive remote control console closed");
         return 0;
     }
 
@@ -224,19 +188,6 @@ public class Sender implements IPluginCommand
         return GROUP;
     }
 
-    /**
-     * <p>
-     * Getter for the field <code>host</code>.
-     * </p>
-     *
-     * @return a {@link java.lang.String} object.
-     * @since 3.0.0
-     */
-    public String getHost()
-    {
-        return host;
-    }
-
     /** {@inheritDoc} */
     @Override
     public String getName()
@@ -253,32 +204,6 @@ public class Sender implements IPluginCommand
 
     /**
      * <p>
-     * Getter for the field <code>port</code>.
-     * </p>
-     *
-     * @return a int.
-     * @since 3.0.0
-     */
-    public int getPort()
-    {
-        return port;
-    }
-
-    /**
-     * <p>
-     * Getter for the field <code>remoteName</code>.
-     * </p>
-     *
-     * @return a {@link java.lang.String} object.
-     * @since 3.0.0
-     */
-    public String getRemoteName()
-    {
-        return remoteName;
-    }
-
-    /**
-     * <p>
      * Getter for the field <code>socket</code>.
      * </p>
      *
@@ -288,32 +213,6 @@ public class Sender implements IPluginCommand
     public Socket getSocket()
     {
         return socket;
-    }
-
-    /**
-     * <p>
-     * isAsynchronous.
-     * </p>
-     *
-     * @return a boolean.
-     * @since 3.0.0
-     */
-    public boolean isAsynchronous()
-    {
-        return asynchronous;
-    }
-
-    /**
-     * <p>
-     * isLogResult.
-     * </p>
-     *
-     * @return a boolean.
-     * @since 3.0.0
-     */
-    public boolean isLogResult()
-    {
-        return logResult;
     }
 
     /** {@inheritDoc} */
@@ -336,43 +235,64 @@ public class Sender implements IPluginCommand
         return stop;
     }
 
-    int processInputRequest(final ExcomContext context, final String inputRequest)
+    public ExComContext processInputRequest(final String... args)
+            throws IOException, ParseException
     {
-        int bytesReceived = 0;
+        final StringBuilder sb = new StringBuilder();
+        for (final String arg : args)
+            sb.append(arg.trim()).append(" ");
+        return processInputRequest(sb.toString());
+    }
+
+    ExComContext processInputRequest(final String inputRequest)
+            throws IOException, ParseException
+    {
+        final ExComConfig config = new ExComConfig(".");
+        final ExComContext context = PluginManager.createContext(
+                config,
+                new PluginManager(config));
+        return processInputRequest(context, inputRequest);
+    }
+
+    ExComContext processInputRequest(final ExComContext context, final String inputRequest)
+            throws IOException, ParseException
+    {
+        context.setBytesReceived(0);
         try
         {
-            excomContext = new ExComCommandContext();
-            excomContext.logResult = logResult;
-            excomContext.timeoutMS = timeoutMS;
-            excomContext.block = !asynchronous;
+            commandContext = new TeleportedCommandContext();
+            commandContext.logResult = config.isLogResult();
+            commandContext.timeoutMS = config.getTimeoutMS();
+            commandContext.block = !config.isAsynchronous();
 
             if (inputRequest.length() == 0)
             {
-                excomContext.commandName = Empty.GROUP + "." + Empty.NAME;
-                excomContext.commandArgs = new String[] { "" };
+                commandContext.commandName = Empty.GROUP + "." + Empty.NAME;
+                commandContext.commandArgs = new String[] { "" };
             } else
             {
                 final int firstWordEnd = inputRequest.indexOf(' ');
                 if (firstWordEnd <= 0)
                 {
-                    excomContext.commandName = inputRequest;
-                    excomContext.commandArgs = new String[] { "" };
+                    commandContext.commandName = inputRequest;
+                    commandContext.commandArgs = new String[] { "" };
 
                 } else
                 {
-                    excomContext.commandName = inputRequest.substring(0, firstWordEnd);
-                    excomContext.commandArgs = new String[] { inputRequest.substring(firstWordEnd + 1) };
+                    commandContext.commandName = inputRequest.substring(0, firstWordEnd);
+                    commandContext.commandArgs = new String[] {
+                            inputRequest.substring(firstWordEnd + 1) };
                 }
             }
 
-            if (excomContext.commandName.equalsIgnoreCase(Quit.NAME))
+            if (commandContext.commandName.equalsIgnoreCase(Quit.NAME))
             {
                 stop();
-                return bytesReceived;
+                return context;
             }
 
-            bytesReceived = communicateWithRemoteHost();
-            context.getOutline().printf(excomContext.result);
+            context.setBytesReceived(communicateWithRemoteHost());
+            context.getOutline().printf(commandContext.result);
 
         } catch (final Exception e)
         {
@@ -380,20 +300,7 @@ public class Sender implements IPluginCommand
         }
         context.getOutline().reset();
 
-        return bytesReceived;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>asynchronous</code>.
-     * </p>
-     *
-     * @param asynchronous a boolean.
-     * @since 3.0.0
-     */
-    public void setAsynchronous(final boolean asynchronous)
-    {
-        this.asynchronous = asynchronous;
+        return context;
     }
 
     /**
@@ -407,58 +314,6 @@ public class Sender implements IPluginCommand
     public void setConsoleInputThread(final Thread consoleInputThread)
     {
         this.consoleInputThread = consoleInputThread;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>host</code>.
-     * </p>
-     *
-     * @param host a {@link java.lang.String} object.
-     * @since 3.0.0
-     */
-    public void setHost(final String host)
-    {
-        this.host = host;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>logResult</code>.
-     * </p>
-     *
-     * @param logResult a boolean.
-     * @since 3.0.0
-     */
-    public void setLogResult(final boolean logResult)
-    {
-        this.logResult = logResult;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>port</code>.
-     * </p>
-     *
-     * @param port a int.
-     * @since 3.0.0
-     */
-    public void setPort(final int port)
-    {
-        this.port = port;
-    }
-
-    /**
-     * <p>
-     * Setter for the field <code>remoteName</code>.
-     * </p>
-     *
-     * @param remoteName a {@link java.lang.String} object.
-     * @since 3.0.0
-     */
-    public void setRemoteName(final String remoteName)
-    {
-        this.remoteName = remoteName;
     }
 
     /**
@@ -491,5 +346,4 @@ public class Sender implements IPluginCommand
     {
         setStop(true);
     }
-
 }

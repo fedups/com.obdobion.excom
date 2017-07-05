@@ -1,7 +1,7 @@
 package com.obdobion.excom.ui.module;
 
 import com.obdobion.argument.annotation.Arg;
-import com.obdobion.excom.ui.ExcomContext;
+import com.obdobion.excom.ui.ExComContext;
 import com.obdobion.excom.ui.IPluginCommand;
 import com.obdobion.excom.ui.Outline;
 
@@ -60,7 +60,7 @@ public class MakeAPlugin implements IPluginCommand
 
     /** {@inheritDoc} */
     @Override
-    public int execute(final ExcomContext context)
+    public int execute(final ExComContext context)
     {
         final Outline ol = context.getOutline();
 

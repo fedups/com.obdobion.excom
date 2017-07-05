@@ -1,11 +1,12 @@
 package com.obdobion.excom.standard;
 
+import java.text.ParseException;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import com.obdobion.argument.annotation.Arg;
-import com.obdobion.excom.ClientCommand;
-import com.obdobion.excom.IExternalRequest;
+import com.obdobion.excom.ui.ExComContext;
+import com.obdobion.excom.ui.IPluginCommand;
 
 /**
  * <p>
@@ -14,7 +15,7 @@ import com.obdobion.excom.IExternalRequest;
  *
  * @author Chris DeGreef fedupforone@gmail.com
  */
-public class Dump implements IExternalRequest
+public class Dump implements IPluginCommand
 {
     @Arg(shortName = 'm',
             longName = "matches",
@@ -27,8 +28,7 @@ public class Dump implements IExternalRequest
             help = "Inverts the selection based on -m.  Only valid with -m")
     private boolean   invertMatches;
 
-    /** {@inheritDoc} */
-    public String execute(final ClientCommand cc) throws Exception
+    public int execute(final ExComContext context) throws ParseException
     {
         final StringBuilder out = new StringBuilder();
         final Map<Thread, StackTraceElement[]> map = Thread.getAllStackTraces();
@@ -72,6 +72,27 @@ public class Dump implements IExternalRequest
             }
             out.append("\n");
         }
-        return out.toString();
+        context.getOutline().printf(out.toString());
+        return 0;
+    }
+
+    public String getGroup()
+    {
+        return "System";
+    }
+
+    public String getName()
+    {
+        return "Dump";
+    }
+
+    public String getOverview()
+    {
+        return "Produce a stack trace report for the process";
+    }
+
+    public boolean isOnceAndDone()
+    {
+        return false;
     }
 }

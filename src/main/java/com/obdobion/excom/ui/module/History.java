@@ -3,11 +3,8 @@ package com.obdobion.excom.ui.module;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.obdobion.argument.annotation.Arg;
-import com.obdobion.excom.ui.ExcomContext;
+import com.obdobion.excom.ui.ExComContext;
 import com.obdobion.excom.ui.HistoryManager;
 import com.obdobion.excom.ui.HistoryManager.HistoryRecord;
 import com.obdobion.excom.ui.IPluginCommand;
@@ -21,8 +18,6 @@ import com.obdobion.excom.ui.IPluginCommand;
  */
 public class History implements IPluginCommand
 {
-    private final static Logger logger = LoggerFactory.getLogger(History.class.getName());
-
     /** Constant <code>GROUP="Menu.GROUP"</code> */
     static public final String  GROUP  = Menu.GROUP;
     /** Constant <code>NAME="history"</code> */
@@ -54,13 +49,12 @@ public class History implements IPluginCommand
 
     /** {@inheritDoc} */
     @Override
-    public int execute(final ExcomContext context)
+    public int execute(final ExComContext context)
     {
         int outputCount = 0;
         int startingPoint = 0;
         context.setRecordingHistory(false);
         final List<HistoryRecord> history = HistoryManager.getInstance().getHistory();
-        logger.debug("found {} history items", history.size());
         /*
          * Scan backwards to know where to start showing when going in the
          * forward direction.

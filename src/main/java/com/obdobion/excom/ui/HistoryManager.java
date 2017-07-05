@@ -8,9 +8,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * <p>
  * HistoryManager class.
@@ -42,8 +39,6 @@ public class HistoryManager
 
     }
 
-    private final static Logger   logger = LoggerFactory.getLogger(HistoryManager.class.getName());
-
     static private HistoryManager instance;
 
     /**
@@ -58,16 +53,16 @@ public class HistoryManager
         return instance;
     }
 
-    private final Config config;
+    private final ExComConfig config;
 
     /**
      * <p>
      * Constructor for HistoryManager.
      * </p>
      *
-     * @param config a {@link com.obdobion.excom.ui.Config} object.
+     * @param config a {@link com.obdobion.excom.ui.ExComConfig} object.
      */
-    public HistoryManager(final Config config)
+    public HistoryManager(final ExComConfig config)
     {
         HistoryManager.instance = this;
         this.config = config;
@@ -88,8 +83,6 @@ public class HistoryManager
     List<HistoryRecord> loadHistory()
     {
         final List<HistoryRecord> history = new ArrayList<>();
-        logger.debug("loading history from {}", config.getHistoryFile().getAbsolutePath());
-
         try (BufferedReader br = new BufferedReader(new FileReader(config.getHistoryFile())))
         {
             String aLine = null;
@@ -97,7 +90,7 @@ public class HistoryManager
                 history.add(new HistoryRecord(aLine));
         } catch (final IOException e)
         {
-            logger.warn(e.getMessage());
+            e.printStackTrace();
         }
         return history;
     }
@@ -107,9 +100,9 @@ public class HistoryManager
      * record.
      * </p>
      *
-     * @param context a {@link com.obdobion.excom.ui.ExcomContext} object.
+     * @param context a {@link com.obdobion.excom.ui.ExComContext} object.
      */
-    public void record(final ExcomContext context)
+    public void record(final ExComContext context)
     {
         if (context == null)
             return;
@@ -120,16 +113,12 @@ public class HistoryManager
          */
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(config.getHistoryFile(), true)))
         {
-            final StringBuilder historyContents = new StringBuilder();
-            historyContents.append(context.getParser().getName());
-            historyContents.append(" ");
-            historyContents.append(context.getOriginalUserInput());
-            bw.write(historyContents.toString());
+            bw.write(context.getOriginalUserInput());
             bw.newLine();
 
         } catch (final IOException e)
         {
-            logger.warn(e.getMessage());
+            e.printStackTrace();
         }
     }
 }

@@ -18,13 +18,13 @@ import com.obdobion.excom.ui.writer.OutlineWriters;
  */
 public class Outline
 {
-    Config         config;
+    ExComConfig         config;
     IOutlineWriter writer;
     String         contents;
 
     List<Outline>  children;
 
-    Outline(final Config config)
+    Outline(final ExComConfig config)
     {
         super();
         this.config = config;
@@ -88,9 +88,9 @@ public class Outline
      * print.
      * </p>
      *
-     * @param context a {@link com.obdobion.excom.ui.ExcomContext} object.
+     * @param context a {@link com.obdobion.excom.ui.ExComContext} object.
      */
-    public void print(final ExcomContext context)
+    public void print(final ExComContext context)
     {
         if (context.isSubcontext())
             return;

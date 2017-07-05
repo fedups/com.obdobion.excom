@@ -1,6 +1,6 @@
 package com.obdobion.excom.ui.writer;
 
-import com.obdobion.excom.ui.Config;
+import com.obdobion.excom.ui.ExComConfig;
 
 /**
  * <p>
@@ -46,11 +46,11 @@ public enum OutlineWriters
      * create.
      * </p>
      *
-     * @param config a {@link Config} object.
+     * @param config a {@link ExComConfig} object.
      *
      * @return a {@link com.obdobion.excom.ui.writer.IOutlineWriter} object.
      */
-    static final public IOutlineWriter create(final Config config)
+    static final public IOutlineWriter create(final ExComConfig config)
     {
         switch (config.getWriterType())
         {

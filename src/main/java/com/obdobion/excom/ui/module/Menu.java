@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import com.obdobion.argument.annotation.Arg;
-import com.obdobion.excom.ui.ExcomContext;
+import com.obdobion.excom.ui.ExComContext;
 import com.obdobion.excom.ui.IPluginCommand;
 import com.obdobion.excom.ui.PluginNotFoundException;
 
@@ -24,7 +24,9 @@ public class Menu implements IPluginCommand
     /** Constant <code>NAME="menu"</code> */
     static public final String NAME               = "menu";
 
-    @Arg(shortName = 'm', help = "Only commands matching all patterns will be displayed.")
+    @Arg(positional = true,
+            shortName = 'm',
+            help = "Only commands matching all patterns will be displayed.")
     private Pattern[]          matches;
 
     @Arg(allowCamelCaps = true, shortName = 's')
@@ -53,7 +55,7 @@ public class Menu implements IPluginCommand
 
     /** {@inheritDoc} */
     @Override
-    public int execute(final ExcomContext context)
+    public int execute(final ExComContext context)
     {
         context.setRecordingHistory(false);
 
@@ -77,11 +79,12 @@ public class Menu implements IPluginCommand
             {}
         });
 
-        context.getOutline().printf(
-                "\n\nThank you for using howto. Read more about related open-source software...\n\n%1$s at %2$s\n%3$s at %4$s\n%5$s at %6$s\n\n",
-                "Argument ", "https://github.com/fedups/com.obdobion.argument/wiki",
-                "Algebrain", "https://github.com/fedups/com.obdobion.algebrain/wiki",
-                "Calendar ", "https://github.com/fedups/com.obdobion.calendar/wiki");
+        // context.getOutline().printf(
+        // "\n\nThank you for using howto. Read more about related open-source
+        // software...\n\n%1$s at %2$s\n%3$s at %4$s\n%5$s at %6$s\n\n",
+        // "Argument ", "https://github.com/fedups/com.obdobion.argument/wiki",
+        // "Algebrain", "https://github.com/fedups/com.obdobion.algebrain/wiki",
+        // "Calendar ", "https://github.com/fedups/com.obdobion.calendar/wiki");
 
         final String headerLayout = "%1$-" + longestGroupLength + "s %2$-" + longestNameLength + "s %3$s\n";
         final String detailLayout = "%1$-" + longestGroupLength + "s %2$-" + longestNameLength + "s %3$s\n";

@@ -3,7 +3,7 @@ package com.obdobion.excom.ui.module;
 import java.text.ParseException;
 
 import com.obdobion.argument.annotation.Arg;
-import com.obdobion.excom.ui.ExcomContext;
+import com.obdobion.excom.ui.ExComContext;
 import com.obdobion.excom.ui.IPluginCommand;
 
 /**
@@ -35,7 +35,7 @@ public class EchoCommand implements IPluginCommand
 
     /** {@inheritDoc} */
     @Override
-    public int execute(final ExcomContext context) throws ParseException
+    public int execute(final ExComContext context) throws ParseException
     {
         showCommand(context);
         return 0;
@@ -69,7 +69,7 @@ public class EchoCommand implements IPluginCommand
         return false;
     }
 
-    private void showCommand(final ExcomContext context)
+    private void showCommand(final ExComContext context)
     {
         context.getOutline().printf("echo set to %s\n", type);
         context.getPluginManager().setEchoType(type);

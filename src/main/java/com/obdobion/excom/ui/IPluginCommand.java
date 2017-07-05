@@ -17,7 +17,7 @@ public interface IPluginCommand
      * @return an int
      * @throws ParseException when a parsing error is detected
      */
-    int execute(ExcomContext context) throws ParseException;
+    int execute(ExComContext context) throws ParseException;
 
     /**
      * <p>

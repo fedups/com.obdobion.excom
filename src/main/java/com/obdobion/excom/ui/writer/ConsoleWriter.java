@@ -3,10 +3,7 @@ package com.obdobion.excom.ui.writer;
 import java.io.Console;
 import java.io.IOException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.obdobion.excom.ui.Config;
+import com.obdobion.excom.ui.ExComConfig;
 
 /**
  * ConsoleWriter.
@@ -19,20 +16,17 @@ import com.obdobion.excom.ui.Config;
  */
 public class ConsoleWriter implements IOutlineWriter
 {
-    private final static Logger logger = LoggerFactory.getLogger(ConsoleWriter.class.getName());
+    ExComConfig config;
+    Console     console;
+    private int newLineCount;
+    private int currentLineLength;
+    private int currentIndentLevelForWrapping;
 
-    Config                      config;
-    Console                     console;
-    private int                 newLineCount;
-    private int                 currentLineLength;
-    private int                 currentIndentLevelForWrapping;
-
-    ConsoleWriter(final Config config)
+    ConsoleWriter(final ExComConfig config)
     {
         console = System.console();
         this.config = config;
-        setCurrentIndentLevelForWrapping(-1);
-        logger.debug("writing output to the console in an indented outline format");
+        setCurrentIndentLevelForWrapping(0);
     }
 
     /** {@inheritDoc} */
@@ -76,7 +70,8 @@ public class ConsoleWriter implements IOutlineWriter
                 indent();
             if (getCurrentLineLength() + aLine.length() >= config.getOutlineWidth())
             {
-                final String[] parts = split(aLine, config.getOutlineWidth() - getCurrentLineLength());
+                final String[] parts = split(aLine,
+                        config.getOutlineWidth() - getCurrentLineLength());
                 /*
                  * It is possible that it is one big word that won't fit. Just
                  * go ahead and overrun the end of the line. That is when the
