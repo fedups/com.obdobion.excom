@@ -5,15 +5,7 @@ import org.junit.Test;
 
 import com.obdobion.excom.ui.ExComContext;
 
-/**
- * <p>
- * HelpTests class.
- * </p>
- *
- * @author Chris DeGreef fedupforone@gmail.com
- * @since 2.0.1
- */
-public class HelpTests
+public class MenuCommandTest
 {
     static ExCom ex;
 
@@ -29,26 +21,34 @@ public class HelpTests
     }
 
     @Test
-    public void commandHelpLong() throws Exception
+    public void menu() throws Exception
     {
         final Sender sender = ex.createSender();
-        final ExComContext context = sender.processInputRequest("menu --help");
+        final ExComContext context = sender.processInputRequest("menu");
         System.out.println(context.getOutline().getWriter().toString());
     }
 
     @Test
-    public void commandEchoLong() throws Exception
+    public void menuMatchesOneCommand() throws Exception
     {
         final Sender sender = ex.createSender();
-        final ExComContext context = sender.processInputRequest("echo --help");
+        final ExComContext context = sender.processInputRequest("menu menu");
         System.out.println(context.getOutline().getWriter().toString());
     }
 
     @Test
-    public void commandHelpShort() throws Exception
+    public void menuMatchesAFew() throws Exception
     {
         final Sender sender = ex.createSender();
-        final ExComContext context = sender.processInputRequest("menu -?");
+        final ExComContext context = sender.processInputRequest("menu system");
+        System.out.println(context.getOutline().getWriter().toString());
+    }
+
+    @Test
+    public void menuMatchesWIthMoreThanOneCriteria() throws Exception
+    {
+        final Sender sender = ex.createSender();
+        final ExComContext context = sender.processInputRequest("menu system history");
         System.out.println(context.getOutline().getWriter().toString());
     }
 }

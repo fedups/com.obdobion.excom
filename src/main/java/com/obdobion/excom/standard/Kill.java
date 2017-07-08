@@ -1,8 +1,10 @@
 package com.obdobion.excom.standard;
 
+import java.text.ParseException;
+
 import com.obdobion.argument.annotation.Arg;
-import com.obdobion.excom.ClientCommand;
-import com.obdobion.excom.IExternalRequest;
+import com.obdobion.excom.ui.ExComContext;
+import com.obdobion.excom.ui.IPluginCommand;
 
 /**
  * <p>
@@ -11,19 +13,18 @@ import com.obdobion.excom.IExternalRequest;
  *
  * @author Chris DeGreef fedupforone@gmail.com
  */
-public class Kill implements IExternalRequest
+public class Kill implements IPluginCommand
 {
     @Arg(longName = "exitCode",
             positional = true,
             inList = { "0", "9" },
-            help = "0 causes a normal end of the JVM with all finalizers.  9 causes a halt of the JVM.")
+            help = "0 causes a normal end of the JVM with all finalizers.  9 causes a halt of the JVM.  Instead of 3 for a dump, use the System.Dump command instead.")
     private int     exitCode;
 
     @Arg(shortName = 'c', required = true)
     private boolean confirm;
 
-    /** {@inheritDoc} */
-    public String execute(final ClientCommand cc) throws Exception
+    public int execute(final ExComContext context) throws ParseException
     {
         switch (exitCode)
         {
@@ -48,9 +49,30 @@ public class Kill implements IExternalRequest
                 }).start();
                 break;
             default:
-                return "kill " + exitCode + " is not a supported exit code";
+                context.getOutline().printf("kill %d is not a supported exit code", exitCode);
+                return -1;
         }
 
-        return "ok";
+        return 0;
+    }
+
+    public String getGroup()
+    {
+        return "System";
+    }
+
+    public String getName()
+    {
+        return "Kill";
+    }
+
+    public String getOverview()
+    {
+        return "Send a termination code to the process";
+    }
+
+    public boolean isOnceAndDone()
+    {
+        return false;
     }
 }

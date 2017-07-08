@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.obdobion</groupId>
 	<artifactId>excom</artifactId>
-	<version>3.1.2</version>
+	<version>4.0.0</version>
 	<description>A command line tool to communicate with a running Java application.</description>
 	<name>${project.groupId}.${project.artifactId}</name>
 	<url>https://github.com/fedups/com.obdobion.excom</url>
@@ -38,12 +38,12 @@
     </issueManagement>
 
 	<properties>
+
+        <argument.version>4.3.8</argument.version>
+
 		<java.target.version>1.8</java.target.version>
 		<java.source.version>1.8</java.source.version>
 		<junit.version>4.8.1</junit.version>
-		
-		<howto.version>1.2.1</howto.version>
-		
 		<project.build.sourceEncoding>Cp1252</project.build.sourceEncoding>
 	</properties>
 
@@ -165,46 +165,6 @@
 				<artifactId>maven-resources-plugin</artifactId>
 				<version>2.7</version>
 			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.10</version>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/mavenDependenciesForNSIS</outputDirectory>
-							<overWriteReleases>false</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<excludeTransitive>false</excludeTransitive>
-							<excludeScope>provided</excludeScope>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>nsis-maven-plugin</artifactId>
-				<version>1.0-alpha-1</version>
-				<configuration>
-					<scriptFile>src/nsis/setup.nsi</scriptFile>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate-headerfile</goal>
-							<goal>make</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
 		</plugins>
 
 	</build>
@@ -216,13 +176,11 @@
 			<version>${junit.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
-		<dependency>
-			<groupId>com.obdobion</groupId>
-			<artifactId>howto</artifactId>
-			<version>${howto.version}</version>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>com.obdobion</groupId>
+            <artifactId>argument</artifactId>
+            <version>${argument.version}</version>
+        </dependency>
 	</dependencies>
 
 </project>
