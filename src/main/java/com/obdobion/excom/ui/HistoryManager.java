@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.obdobion.excom.TeleportedCommandContext;
+
 /**
  * <p>
  * HistoryManager class.
@@ -114,6 +116,37 @@ public class HistoryManager
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(config.getHistoryFile(), true)))
         {
             bw.write(context.getOriginalUserInput());
+            bw.newLine();
+
+        } catch (final IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * <p>
+     * record.
+     * </p>
+     *
+     * @param context a {@link com.obdobion.excom.ui.ExComContext} object.
+     */
+    public void record(final TeleportedCommandContext context)
+    {
+        if (context == null)
+            return;
+        /*
+         * Append to the end of the file
+         */
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(config.getHistoryFile(), true)))
+        {
+            bw.write(context.getCommandName());
+            if (context.getCommandArgs() != null)
+                for (final String arg : context.getCommandArgs())
+                {
+                    bw.write(" ");
+                    bw.write(arg);
+                }
             bw.newLine();
 
         } catch (final IOException e)

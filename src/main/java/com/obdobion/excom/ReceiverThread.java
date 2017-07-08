@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.obdobion.excom.ui.ExComContext;
+import com.obdobion.excom.ui.HistoryManager;
 import com.obdobion.excom.ui.IPluginCommand;
 import com.obdobion.excom.ui.PluginNotFoundException;
 
@@ -30,10 +31,10 @@ public class ReceiverThread extends Thread
 {
     private final static Logger logger = LoggerFactory.getLogger(ReceiverThread.class.getName());
 
-    List<Thread>                clientProcesses;
-    private final Receiver      receiver;
-    boolean                     running;
-    protected ServerSocket      serverSocket;
+    List<Thread>           clientProcesses;
+    private final Receiver receiver;
+    boolean                running;
+    protected ServerSocket serverSocket;
 
     /**
      * <p>
@@ -45,7 +46,7 @@ public class ReceiverThread extends Thread
      * @param serverSocket a {@link java.net.ServerSocket} object.
      */
     public ReceiverThread(final String name, final Receiver receiver,
-            final ServerSocket serverSocket)
+                    final ServerSocket serverSocket)
     {
         super(name);
         this.receiver = receiver;
@@ -108,7 +109,7 @@ public class ReceiverThread extends Thread
                 try
                 {
                     final ExComContext cc = getReceiver().getExCom().getPlugInManager()
-                            .run(context.commandName.toLowerCase(), context.commandArgs);
+                                    .run(context.commandName.toLowerCase(), context.commandArgs);
                     context.result = cc.getOutline().getWriter().toString();
                 } catch (final Exception e)
                 {
@@ -121,7 +122,7 @@ public class ReceiverThread extends Thread
     }
 
     private TeleportedCommandContext createContext(final Socket client, final StringBuilder out)
-            throws Exception
+                    throws Exception
     {
         final byte[] b = new byte[4096];
         final int cnt = client.getInputStream().read(b);
@@ -169,7 +170,7 @@ public class ReceiverThread extends Thread
     }
 
     private Thread createTimeoutWatcherThread(final TeleportedCommandContext watchingContext,
-            final Thread watchingThread)
+                    final Thread watchingThread)
     {
         return new Thread("ExComTimeoutWatcher")
         {
@@ -225,15 +226,15 @@ public class ReceiverThread extends Thread
         timeoutWatcher.start();
         if (context.block)
             try
-        {
+            {
                 timeoutWatcher.join();
-        } catch (final InterruptedException e)
-        {
-            logger.warn("command interrupted");
-            commandThread.stop();
-            context.result = "interrupted";
-        } finally
-        {}
+            } catch (final InterruptedException e)
+            {
+                logger.warn("command interrupted");
+                commandThread.stop();
+                context.result = "interrupted";
+            } finally
+            {}
         else
         {
             context.result = "asynchronous";
@@ -283,8 +284,8 @@ public class ReceiverThread extends Thread
                 final Stack<?> parentNDC = NDC.cloneStack();
 
                 final Thread clientProcess = new Thread(
-                        (context == null ? "help" : context.commandName)
-                        + "_ExComCommandTimeOutController")
+                                (context == null ? "help" : context.commandName)
+                                                + "_ExComCommandTimeOutController")
                 {
                     @Override
                     @SuppressWarnings("deprecation")
@@ -302,6 +303,7 @@ public class ReceiverThread extends Thread
                                 clientThread = createCommandThread(contextForThread);
                                 forkAndTime(clientThread, contextForThread);
                                 out.append(contextForThread.result);
+                                HistoryManager.getInstance().record(contextForThread);
                             }
                         } catch (final Exception e)
                         {
@@ -362,7 +364,7 @@ public class ReceiverThread extends Thread
     private String myNdcId()
     {
         return "excom@" + serverSocket.getInetAddress().getHostName() + ":"
-                + serverSocket.getLocalPort();
+                        + serverSocket.getLocalPort();
     }
 
     private void nl(final StringBuilder out)
@@ -399,18 +401,18 @@ public class ReceiverThread extends Thread
             running = true;
             while (getReceiver().isRunning())
                 try
-            {
+                {
                     forkOffClientProcess(serverSocket.accept());
-            } catch (final SocketTimeoutException e)
-            {
-                logger.error("run()", e);
-                continue;
-            } catch (final IOException e)
-            {
-                if (!"socket closed".equals(e.getMessage()))
-                    logger.warn(e.getMessage());
-                continue;
-            }
+                } catch (final SocketTimeoutException e)
+                {
+                    logger.error("run()", e);
+                    continue;
+                } catch (final IOException e)
+                {
+                    if (!"socket closed".equals(e.getMessage()))
+                        logger.warn(e.getMessage());
+                    continue;
+                }
         } finally
         {
             synchronized (clientProcesses)
@@ -462,8 +464,8 @@ public class ReceiverThread extends Thread
         {
             try
             {
-                final IPluginCommand     cc = getReceiver().getExCom().getPlugInManager()
-                        .get(sn.toLowerCase());
+                final IPluginCommand cc = getReceiver().getExCom().getPlugInManager()
+                                .get(sn.toLowerCase());
                 out.append(fixedWidth(cc.getName(), maxWidth));
                 if (cc.getOverview() != null)
                 {
@@ -472,8 +474,7 @@ public class ReceiverThread extends Thread
                 }
                 nl(out);
             } catch (final PluginNotFoundException e)
-            {
-            }
+            {}
         }
         // hr(out);
     }

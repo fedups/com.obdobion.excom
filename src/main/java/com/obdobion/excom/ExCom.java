@@ -17,28 +17,12 @@ import com.obdobion.excom.ui.PluginManager;
  */
 final public class ExCom
 {
-    /**
-     * <p>
-     * destroyContext.
-     * </p>
-     *
-     * @param context a {@link com.obdobion.excom.ui.ExComContext} object.
-     */
-    static public void stop(final ExComContext context)
-    {
-        if (context == null)
-            return;
-        context.getConsoleErrorOutput().flush();
-    }
-
     private final ExComConfig config;
 
-    private PluginManager     pluginManager;
-    private Receiver          receiver;
+    private PluginManager pluginManager;
+    private Receiver      receiver;
 
-    private HistoryManager    histman;
-
-    public ExCom() throws IOException, ParseException
+    ExCom() throws IOException, ParseException
     {
         config = new ExComConfig(".");
     }
@@ -48,12 +32,17 @@ final public class ExCom
         return config;
     }
 
-    public Receiver startReceiveMode() throws IOException, ParseException
+    static public Receiver listenForExternalCommands() throws IOException, ParseException
+    {
+        return new ExCom().startReceiveMode();
+    }
+
+    private Receiver startReceiveMode() throws IOException, ParseException
     {
         if (pluginManager != null)
             return receiver;
 
-        histman = new HistoryManager(config);
+        new HistoryManager(config);
         pluginManager = new PluginManager(config);
         pluginManager.loadCommands();
         receiver = new Receiver(this);
@@ -66,8 +55,15 @@ final public class ExCom
         return pluginManager;
     }
 
-    public Sender createSender() throws IOException, ParseException
+    public static ExComContext sendExternalCommandToListener(final String[] args)
+                    throws IOException, ParseException
     {
-        return new Sender();
+        return new Sender().processInputRequest(args);
+    }
+
+    public static ExComContext sendExternalCommandToListener(final String args)
+                    throws IOException, ParseException
+    {
+        return new Sender().processInputRequest(args);
     }
 }

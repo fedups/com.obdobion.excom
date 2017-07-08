@@ -91,4 +91,14 @@ public class TeleportedCommandContext
     {
         return timeoutMS;
     }
+
+    public String[] getCommandArgs()
+    {
+        return commandArgs;
+    }
+
+    public String getCommandName()
+    {
+        return commandName;
+    }
 }
