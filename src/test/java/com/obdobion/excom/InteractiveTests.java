@@ -1,5 +1,7 @@
 package com.obdobion.excom;
 
+import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -13,17 +15,24 @@ import org.junit.Test;
  */
 public class InteractiveTests
 {
-    static ExCom ex;
+    static private Receiver      receiver;
 
     @BeforeClass
     public static void before() throws Exception
     {
         try
         {
-            ex = new ExCom();
-            ex.startReceiveMode();
+            receiver = ExCom.listenForExternalCommands();
         } catch (final Exception e)
-        {}
+        {
+            Assert.fail(e.getMessage());
+        }
+    }
+
+    @AfterClass
+    public static void after() throws Exception
+    {
+        receiver.stop();
     }
 
     @Test
